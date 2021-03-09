@@ -1,0 +1,22 @@
+.articleCard {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fa-thumbs-up:hover {
+  color: greenyellow;
+}
+
+.fa-thumbs-down:hover {
+  color: red;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
