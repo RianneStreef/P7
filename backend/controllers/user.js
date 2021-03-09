@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 exports.signup = (req, res, next) => {
-  console.log("adding user");
+  console.log('adding user');
   bcrypt.hash(req.body.password, 10).then((hash) => {
     const user = new User({
       firstName: req.body.first,
@@ -11,33 +11,32 @@ exports.signup = (req, res, next) => {
       email: req.body.email,
       password: hash,
     });
-    console.log("saving user");
+    console.log('saving user');
     console.log(user);
     user
-      // this is where it stops working..
-
       .save()
       .then(() => {
         res.status(201).json({
-          message: "User added successfully!",
+          message: 'User added successfully!',
         });
       })
       .catch((error) => {
+        console.log(error);
         res.status(500).json({
-          error: new Error("User not added"),
+          error: new Error('User not added'),
         });
       });
   });
 };
 
 exports.login = (req, res, next) => {
-  console.log("logging in");
+  console.log('logging in');
   console.log({ email: req.body.email });
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
         return res.status(401).json({
-          error: new Error("User not found!"),
+          error: new Error('User not found!'),
         });
       }
       bcrypt
@@ -45,15 +44,15 @@ exports.login = (req, res, next) => {
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({
-              error: new Error("Incorrect password!"),
+              error: new Error('Incorrect password!'),
             });
           }
           const token = jwt.sign(
             { userId: user._id },
-            "ljfbfsvdbjxzliuymnw2130lwkendv",
+            'ljfbfsvdbjxzliuymnw2130lwkendv',
             {
-              expiresIn: "24h",
-            }
+              expiresIn: '24h',
+            },
           );
           res.status(200).json({
             userId: user._id,
@@ -88,10 +87,10 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.modifyUser = (req, res, next) => {
-  console.log("modifying user");
+  console.log('modifying user');
   const userId = req.params.id;
 
-  const host = req.protocol + "://" + req.get("host");
+  const host = req.protocol + '://' + req.get('host');
 
   let newObj = {};
 
@@ -99,7 +98,7 @@ exports.modifyUser = (req, res, next) => {
   if (image) {
     // if (req?.body?.sauce) {
     const parsedData = JSON.parse(req.body.user);
-    const imageUrl = host + "/images/" + req.file.filename;
+    const imageUrl = host + '/images/' + req.file.filename;
     newObj = {
       firstName: parsedData.firstName,
       lastName: parsedData.lastName,
@@ -119,13 +118,13 @@ exports.modifyUser = (req, res, next) => {
     { ...newObj },
     (err, updatedUser) => {
       if (err) {
-        console.log("ERROR");
+        console.log('ERROR');
       } else {
         res.status(201).json({
-          message: "User successfully modified!",
+          message: 'User successfully modified!',
         });
       }
-    }
+    },
   );
 };
 

@@ -48,7 +48,7 @@ function App() {
 
       {isLoggedIn ? (
         <LoggedInDisplay
-          isLoggedIn={isLoggedIn}
+          setLoggedIn={setLoggedIn}
           isSignedUp={isSignedUp}
           articles={articles}
           addArticle={addArticle}
@@ -59,7 +59,11 @@ function App() {
           changeProfileDetails={changeProfileDetails}
         />
       ) : (
-        <FormToDisplay isLoggedIn={isLoggedIn} isSignedUp={isSignedUp} />
+        <FormToDisplay
+          isLoggedIn={isLoggedIn}
+          isSignedUp={isSignedUp}
+          setLoggedIn={setLoggedIn}
+        />
       )}
     </div>
   );
