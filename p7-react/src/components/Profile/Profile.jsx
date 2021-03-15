@@ -3,7 +3,14 @@ import ShowProfile from '../ShowProfile/ShowProfile';
 import EditProfile from '../EditProfile/EditProfile';
 
 function Profile(props) {
-  const { editProfile, changeProfileDetails, showProfile, openProfile } = props;
+  const {
+    editProfile,
+    changeProfileDetails,
+    showProfile,
+    openProfile,
+    currentUser,
+    setCurrentUser,
+  } = props;
   return (
     <div>
       <div>
@@ -11,6 +18,8 @@ function Profile(props) {
           <EditProfile
             editProfile={editProfile}
             changeProfileDetails={changeProfileDetails}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
           />
         ) : (
           <ShowProfile
@@ -18,6 +27,8 @@ function Profile(props) {
             showProfile={showProfile}
             openProfile={openProfile}
             changeProfileDetails={changeProfileDetails}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
           />
         )}
       </div>

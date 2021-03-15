@@ -3,7 +3,6 @@ import './App.css';
 import Header from './components/Header/Header';
 import FormToDisplay from './components/FormToDisplay/FormToDisplay';
 import LoggedInDisplay from './components/LoggedInDisplay/LoggedInDisplay';
-// import MockArticles from './mock-data/mock-data';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -12,6 +11,7 @@ function App() {
   const [addArticle, setAddArticle] = useState(false);
   const [showProfile, openProfile] = useState(false);
   const [editProfile, changeProfileDetails] = useState(false);
+  const [currentUser, setCurrentUser] = useState('');
 
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
@@ -23,6 +23,7 @@ function App() {
     //    function.
     // fetchData() function will add the API call data to your state
     function fetchData() {
+      console.log('articles fetched');
       fetch('http://localhost:3001/api/articles')
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
@@ -49,17 +50,25 @@ function App() {
       {isLoggedIn ? (
         <LoggedInDisplay
           isLoggedIn={isLoggedIn}
+          setLoggedIn={setLoggedIn}
           isSignedUp={isSignedUp}
           articles={articles}
+          setArticles={setArticles}
           addArticle={addArticle}
           setAddArticle={setAddArticle}
           showProfile={showProfile}
           openProfile={openProfile}
           editProfile={editProfile}
           changeProfileDetails={changeProfileDetails}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ) : (
-        <FormToDisplay isLoggedIn={isLoggedIn} isSignedUp={isSignedUp} />
+        <FormToDisplay
+          isLoggedIn={isLoggedIn}
+          setLoggedIn={setLoggedIn}
+          isSignedUp={isSignedUp}
+        />
       )}
     </div>
   );

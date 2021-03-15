@@ -3,7 +3,13 @@ import img from '../../img/profile.png';
 import './ShowProfile.css';
 
 function ShowProfile(props) {
-  const { editProfile, changeProfileDetails, showProfile, openProfile } = props;
+  const {
+    editProfile,
+    changeProfileDetails,
+    showProfile,
+    openProfile,
+    currentUser,
+  } = props;
 
   function showEditProfile() {
     changeProfileDetails(!editProfile);
@@ -12,6 +18,8 @@ function ShowProfile(props) {
   function closeProfile() {
     openProfile(!showProfile);
   }
+
+  function findCurrentUser() {}
 
   return (
     <div className="card">
@@ -24,7 +32,7 @@ function ShowProfile(props) {
       <div className="profile-card">
         <div>
           <p className="name">
-            <span>Rianne </span>
+            <span>Rianne</span>
             <span>Streef</span>
           </p>
           <p>riannestreef@gmail.com</p>

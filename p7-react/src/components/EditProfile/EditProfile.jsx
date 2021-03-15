@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function EditProfile(props) {
-  const { editProfile, changeProfileDetails } = props;
+  const {
+    editProfile,
+    changeProfileDetails,
+    currentUser,
+    setCurrentUser,
+  } = props;
 
   const [userDetails, setUserDetails] = useState({
-    email: 'ri@anne.com',
-    password: 'an',
-    first: 'ne',
-    last: 'st',
-    picture: 'reef',
+    email: '',
+    password: '',
+    first: '',
+    last: '',
+    picture: '',
   });
 
   const { email, password, first, last, picture } = userDetails;

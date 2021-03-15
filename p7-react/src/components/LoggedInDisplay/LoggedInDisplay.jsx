@@ -8,9 +8,12 @@ function LoggedInDisplay(props) {
     editProfile,
     changeProfileDetails,
     articles,
+    setArticles,
     addArticle,
     setAddArticle,
     openProfile,
+    currentUser,
+    setCurrentUser,
   } = props;
 
   return (
@@ -21,10 +24,13 @@ function LoggedInDisplay(props) {
           showProfile={showProfile}
           openProfile={openProfile}
           changeProfileDetails={changeProfileDetails}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ) : (
         <ArticleDisplay
           articles={articles}
+          setArticles={setArticles}
           addArticle={addArticle}
           setAddArticle={setAddArticle}
         />

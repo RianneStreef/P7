@@ -4,16 +4,21 @@ import AddArticle from '../AddArticle/AddArticle';
 import ShowArticles from '../ShowArticles/ShowArticles';
 
 function ArticleDisplay(props) {
-  const { articles, addArticle, setAddArticle } = props;
+  const { articles, setArticles, addArticle, setAddArticle } = props;
 
   return (
     <div>
       <div>
         {addArticle ? (
-          <AddArticle addArticle={addArticle} setAddArticle={setAddArticle} />
+          <AddArticle
+            addArticle={addArticle}
+            setArticles={setArticles}
+            setAddArticle={setAddArticle}
+          />
         ) : (
           <ShowArticles
             articles={articles}
+            setArticles={setArticles}
             addArticle={addArticle}
             setAddArticle={setAddArticle}
           />
