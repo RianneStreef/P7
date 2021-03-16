@@ -18,6 +18,10 @@ function App() {
     console.log(isLoggedIn);
   }
 
+  function changeCurrentUser() {
+    setCurrentUser('');
+  }
+
   useEffect(() => {
     // Runs once. When it runs, it will call the fetchData()
     //    function.
@@ -41,6 +45,9 @@ function App() {
         showProfile={showProfile}
         openProfile={openProfile}
         changeLogin={changeLogin}
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+        changeCurrentUser={changeCurrentUser}
       />
 
       <button type="button" onClick={changeLogin}>
@@ -61,13 +68,14 @@ function App() {
           editProfile={editProfile}
           changeProfileDetails={changeProfileDetails}
           currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
         />
       ) : (
         <FormToDisplay
           isLoggedIn={isLoggedIn}
           setLoggedIn={setLoggedIn}
           isSignedUp={isSignedUp}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       )}
     </div>

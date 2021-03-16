@@ -63,8 +63,6 @@ app.get("/api/articles", (req, res, next) => {
   );
 });
 
-// title, description, url
-
 app.post("/api/auth/signup", (req, res, next) => {
   console.log("signing up");
   const { email, password, firstName, lastName } = req.body;
@@ -86,6 +84,32 @@ app.post("/api/auth/signup", (req, res, next) => {
 
       return res.status(200).json({
         message: "success",
+      });
+    }
+  );
+});
+
+app.get("/api/auth/", (req, res, next) => {
+  console.log(chalk.magenta("looking for user"));
+  // console.log(req.body);
+  // const { currentUser } = req.body;
+  const currentUser = "riannestreef@gmail.com";
+  console.log(currentUser);
+  // define email to find
+  con.query(
+    // 'GET * FROM Users'
+
+    `SELECT * FROM Users WHERE ('email=${currentUser}');`,
+    // make email dynamic
+
+    // like signup call
+    function (err, result) {
+      if (err) {
+        console.log(err);
+      }
+      return res.status(200).json({
+        // return all info on entry with defined email ??
+        user: "result",
       });
     }
   );

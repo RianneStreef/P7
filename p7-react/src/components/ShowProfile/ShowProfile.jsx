@@ -1,5 +1,9 @@
-import React from 'react';
+// import userEvent from '@testing-library/user-event';
+import React, { useEffect } from 'react';
+import axios from 'axios';
+
 import img from '../../img/profile.png';
+
 import './ShowProfile.css';
 
 function ShowProfile(props) {
@@ -19,7 +23,22 @@ function ShowProfile(props) {
     openProfile(!showProfile);
   }
 
-  function findCurrentUser() {}
+  useEffect(() => {
+    console.log('loading user');
+    const userDetails = async () => {
+      console.log('contacting server for details');
+      try {
+        console.log('getting user');
+        console.log(currentUser);
+
+        await axios.get('http://localhost:3001/api/auth/');
+        console.log(userDetails);
+      } catch (err) {
+        console.log('cant get user');
+      }
+    };
+    userDetails();
+  });
 
   return (
     <div className="card">

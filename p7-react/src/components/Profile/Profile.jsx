@@ -9,7 +9,6 @@ function Profile(props) {
     showProfile,
     openProfile,
     currentUser,
-    setCurrentUser,
   } = props;
   return (
     <div>
@@ -19,7 +18,6 @@ function Profile(props) {
             editProfile={editProfile}
             changeProfileDetails={changeProfileDetails}
             currentUser={currentUser}
-            setCurrentUser={setCurrentUser}
           />
         ) : (
           <ShowProfile
@@ -28,7 +26,6 @@ function Profile(props) {
             openProfile={openProfile}
             changeProfileDetails={changeProfileDetails}
             currentUser={currentUser}
-            setCurrentUser={setCurrentUser}
           />
         )}
       </div>

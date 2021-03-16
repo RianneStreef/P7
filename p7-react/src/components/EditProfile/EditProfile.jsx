@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+// import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 function EditProfile(props) {
-  const {
-    editProfile,
-    changeProfileDetails,
-    currentUser,
-    setCurrentUser,
-  } = props;
+  const { editProfile, changeProfileDetails, currentUser } = props;
+
+  const [isError, setIsError] = useState('');
+
+  // somehow get info by id from DB, and set userDetails with this. Use these
+  // details as placeholders.
 
   const [userDetails, setUserDetails] = useState({
     email: '',
@@ -38,7 +39,7 @@ function EditProfile(props) {
 
     event.preventDefault();
     try {
-      axios.post('http://localhost:3001/api/auth/1', userDetails);
+      axios.put('http://localhost:3001/api/auth/', userDetails);
     } catch (err) {
       console.error('Error submitting');
     }
@@ -46,6 +47,8 @@ function EditProfile(props) {
 
   return (
     <div className="card">
+      {isError && <div>{isError}</div>}
+
       <div className="cardTitle">
         <h1>Edit Profile</h1>
         <button

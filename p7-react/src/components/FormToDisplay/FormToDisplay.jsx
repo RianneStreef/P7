@@ -3,7 +3,13 @@ import SignUp from '../SignUp/SignUp';
 import Login from '../Login/Login';
 
 function FormToDisplay(props) {
-  const { isLoggedIn, setLoggedIn, isSignedUp } = props;
+  const {
+    isLoggedIn,
+    setLoggedIn,
+    isSignedUp,
+    currentUser,
+    setCurrentUser,
+  } = props;
   return (
     <div>
       {isSignedUp ? (
@@ -11,9 +17,16 @@ function FormToDisplay(props) {
           isLoggedIn={isLoggedIn}
           setLoggedIn={setLoggedIn}
           isSignedUp={isSignedUp}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ) : (
-        <SignUp isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
+        <SignUp
+          isLoggedIn={isLoggedIn}
+          setLoggedIn={setLoggedIn}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
       )}
     </div>
   );

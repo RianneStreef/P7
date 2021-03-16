@@ -4,7 +4,7 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 
 function signUp(props) {
-  const { isLoggedIn, setLoggedIn } = props;
+  const { isLoggedIn, setLoggedIn, currentUser, setCurrentUser } = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState('');
@@ -15,6 +15,8 @@ function signUp(props) {
     firstName: 'Rianne',
     lastName: 'Streef',
   });
+
+  const { email, password, firstName, lastName } = signUpDetails;
 
   const handleInput = (event) => {
     setSignUpDetails((prevState) => {
@@ -29,24 +31,23 @@ function signUp(props) {
   const handleSubmit = async (event) => {
     setIsError('');
     setIsLoading(true);
-    console.log('sending sign up details');
 
     event.preventDefault();
     try {
       await axios.post('http://localhost:3001/api/auth/signup', signUpDetails);
       setIsLoading(false);
       setLoggedIn(true);
-      console.log(isLoggedIn);
+
+      setCurrentUser(email);
     } catch (err) {
-      if (err) {
-        // err.response.data.message;
-        setIsError('Email is already taken');
-      }
+      // console.log(err.response.data.message);
+      // if (err.response && err.response.data.message) {
+      //   setIsError(err.response.data.message);
+      //   // setIsError('Email is already taken');
+      // }
       setIsLoading(false);
     }
   };
-
-  const { email, password, firstName, lastName } = signUpDetails;
 
   return (
     <div className="sign-up card">

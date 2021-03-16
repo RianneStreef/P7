@@ -11,6 +11,9 @@ function Header(props) {
     changeLogin,
     showProfile,
     openProfile,
+    currentUser,
+    setCurrentUser,
+    changeCurrentUser,
   } = props;
 
   function changeSignUp() {
@@ -37,6 +40,9 @@ function Header(props) {
           isLoggedIn={isLoggedIn}
           setLoggedIn={setLoggedIn}
           changeLogin={changeLogin}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          changeCurrentUser={changeCurrentUser}
         />
       )}
     </header>
