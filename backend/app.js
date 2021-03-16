@@ -70,11 +70,22 @@ app.post("/api/auth/signup", (req, res, next) => {
   con.query(
     `INSERT INTO Users (firstName, lastName, email, password) VALUES ('${firstName}', '${lastName}', '${email}', '${password}');`,
     function (err, result) {
+      console.log(result);
+      console.log(result.insertId);
       if (err) {
         console.log(err);
         if (err.errno && err.errno === 1062) {
           return res.status(400).json({
             message: "Error. Duplicate email field",
+            field: "email",
+          });
+        }
+        // THIS IS FOR DEMO, TAKE OUT OR REWORK
+        // The field shows which control on frontend had an error
+        if (err.errno && err.errno === 9999999) {
+          return res.status(400).json({
+            message: "Error. Username invalid syntax",
+            field: "username",
           });
         }
         return res.status(500).json({
@@ -83,37 +94,92 @@ app.post("/api/auth/signup", (req, res, next) => {
       }
 
       return res.status(200).json({
-        message: "success",
+        user: { email, firstName, lastName, id: result.insertId },
       });
     }
   );
 });
 
-app.get("/api/auth/", (req, res, next) => {
-  console.log(chalk.magenta("looking for user"));
-  // console.log(req.body);
-  // const { currentUser } = req.body;
-  const currentUser = "riannestreef@gmail.com";
-  console.log(currentUser);
-  // define email to find
-  con.query(
-    // 'GET * FROM Users'
-
-    `SELECT * FROM Users WHERE ('email=${currentUser}');`,
-    // make email dynamic
-
-    // like signup call
-    function (err, result) {
-      if (err) {
-        console.log(err);
-      }
-      return res.status(200).json({
-        // return all info on entry with defined email ??
-        user: "result",
+app.delete("/api/auth/", (req, res, next) => {
+  console.log("finding and deleting profile");
+  console.log("current user id = ");
+  console.log(id);
+  con.query(`DELETE FROM Users WHERE id='${id}';`, function (err, result) {
+    if (err) {
+      return res.status(400).json({
+        message: "Unable to delete profile",
       });
     }
-  );
+    return res.status(200).json({
+      message: "Profile deleted",
+    });
+  });
 });
+
+app.put("/api/auth/", (req, res, next) => {
+  console.log("changing profile");
+  const { email, firstName, lastName } = req.body;
+  console.log(email, firstName, lastName);
+  con
+    .query
+
+    // `INSERT INTO Users (firstName, lastName, email, password) VALUES ('${firstName}', '${lastName}', '${email}', '${password}');`,
+    // function (err, result) {
+    //   console.log(result);
+    //   console.log(result.insertId);
+    //   if (err) {
+    //     console.log(err);
+    //     if (err.errno && err.errno === 1062) {
+    //       return res.status(400).json({
+    //         message: "Error. Duplicate email field",
+    //         field: "email",
+    //       });
+    //     }
+    //     // THIS IS FOR DEMO, TAKE OUT OR REWORK
+    //     // The field shows which control on frontend had an error
+    //     if (err.errno && err.errno === 9999999) {
+    //       return res.status(400).json({
+    //         message: "Error. Username invalid syntax",
+    //         field: "username",
+    //       });
+    //     }
+    //     return res.status(500).json({
+    //       message: "Unknown error",
+    //     });
+    //   }
+
+    //   return res.status(200).json({
+    //     user: { email, firstName, lastName, id: result.insertId },
+    //   });
+    // }
+    ();
+});
+
+// app.get("/api/auth/", (req, res, next) => {
+//   console.log(chalk.magenta("looking for user"));
+//   // console.log(req.body);
+//   // const { currentUser } = req.body;
+//   const currentUser = "riannestreef@gmail.com";
+//   console.log(currentUser);
+//   // define email to find
+//   con.query(
+//     // 'GET * FROM Users'
+
+//     `SELECT * FROM Users WHERE email='${currentUser}';`,
+//     // make email dynamic
+
+//     // like signup call
+//     function (err, result) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       return res.status(200).json({
+//         // return all info on entry with defined email ??
+//         user: "result",
+//       });
+//     }
+//   );
+// });
 
 app.post("/api/articles", (req, res, next) => {
   console.log("start");

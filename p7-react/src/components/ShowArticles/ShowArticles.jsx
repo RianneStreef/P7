@@ -2,7 +2,13 @@ import React from 'react';
 import Article from '../Article/Article';
 
 function ShowArticles(props) {
-  const { articles, addArticle, setAddArticle } = props;
+  const {
+    articles,
+    addArticle,
+    setAddArticle,
+    currentUser,
+    setCurrentUser,
+  } = props;
 
   function openAddArticle() {
     setAddArticle(!addArticle);
@@ -22,6 +28,9 @@ function ShowArticles(props) {
           description={article.description}
           usersLiked={article.usersLiked}
           usersDisliked={article.usersDisliked}
+          articles={articles}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ))}
     </div>

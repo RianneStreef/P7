@@ -120,3 +120,7 @@ button:hover {
 #password {
   -webkit-text-security: disc;
 }
+
+.err {
+  color: red;
+}

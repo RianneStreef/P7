@@ -15,6 +15,8 @@ function ShowProfile(props) {
     currentUser,
   } = props;
 
+  const { firstName, lastName, id, email, articlesRead } = currentUser;
+
   function showEditProfile() {
     changeProfileDetails(!editProfile);
     console.log('change state edit profile to true');
@@ -23,22 +25,22 @@ function ShowProfile(props) {
     openProfile(!showProfile);
   }
 
-  useEffect(() => {
-    console.log('loading user');
-    const userDetails = async () => {
-      console.log('contacting server for details');
-      try {
-        console.log('getting user');
-        console.log(currentUser);
+  // useEffect(() => {
+  //   console.log('loading user');
+  //   const userDetails = async () => {
+  //     console.log('contacting server for details');
+  //     try {
+  //       console.log('getting user');
+  //       console.log(currentUser);
 
-        await axios.get('http://localhost:3001/api/auth/');
-        console.log(userDetails);
-      } catch (err) {
-        console.log('cant get user');
-      }
-    };
-    userDetails();
-  });
+  //       await axios.get('http://localhost:3001/api/auth/');
+  //       console.log(userDetails);
+  //     } catch (err) {
+  //       console.log('cant get user');
+  //     }
+  //   };
+  //   userDetails();
+  // });
 
   return (
     <div className="card">
@@ -51,13 +53,13 @@ function ShowProfile(props) {
       <div className="profile-card">
         <div>
           <p className="name">
-            <span>Rianne</span>
-            <span>Streef</span>
+            <span>{currentUser.firstName} </span>
+            <span>{currentUser.lastName}</span>
           </p>
-          <p>riannestreef@gmail.com</p>
+          <p>{currentUser.email}</p>
         </div>
         <div>
-          <img src={img} alt="You!" />
+          <img src={img} className="profile-picture" alt="You!" />
         </div>
       </div>
       <div className="button-container">

@@ -4,7 +4,14 @@ import AddArticle from '../AddArticle/AddArticle';
 import ShowArticles from '../ShowArticles/ShowArticles';
 
 function ArticleDisplay(props) {
-  const { articles, setArticles, addArticle, setAddArticle } = props;
+  const {
+    articles,
+    setArticles,
+    addArticle,
+    setAddArticle,
+    currentUser,
+    setCurrentUser,
+  } = props;
 
   return (
     <div>
@@ -21,6 +28,8 @@ function ArticleDisplay(props) {
             setArticles={setArticles}
             addArticle={addArticle}
             setAddArticle={setAddArticle}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
           />
         )}
       </div>

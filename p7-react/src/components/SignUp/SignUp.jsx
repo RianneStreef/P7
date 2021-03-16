@@ -7,13 +7,14 @@ function signUp(props) {
   const { isLoggedIn, setLoggedIn, currentUser, setCurrentUser } = props;
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState('');
+  const [isError, setError] = useState('');
 
   const [signUpDetails, setSignUpDetails] = useState({
     email: 'riannestreef@gmail.com',
     password: 'hallo',
     firstName: 'Rianne',
     lastName: 'Streef',
+    articlesRead: [],
   });
 
   const { email, password, firstName, lastName } = signUpDetails;
@@ -29,29 +30,37 @@ function signUp(props) {
   };
 
   const handleSubmit = async (event) => {
-    setIsError('');
+    setError('');
     setIsLoading(true);
 
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/auth/signup', signUpDetails);
+      const res = await axios.post(
+        'http://localhost:3001/api/auth/signup',
+        signUpDetails
+      );
       setIsLoading(false);
       setLoggedIn(true);
 
-      setCurrentUser(email);
+      console.log(res);
+
+      console.log(res.data.user);
+      setCurrentUser(res.data.user);
+      console.log(currentUser);
     } catch (err) {
-      // console.log(err.response.data.message);
-      // if (err.response && err.response.data.message) {
-      //   setIsError(err.response.data.message);
-      //   // setIsError('Email is already taken');
-      // }
+      if (err?.response && err?.response?.data?.message) {
+        console.log(err?.response?.data?.message);
+        setError(err.response.data.message);
+      } else {
+        setError('Unknown error occurred');
+      }
       setIsLoading(false);
     }
   };
 
   return (
     <div className="sign-up card">
-      {isError && <div>{isError}</div>}
+      {isError && <div className="err">{isError}</div>}
       {isLoading && <Spinner />}
       {!isLoading && (
         <>

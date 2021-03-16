@@ -11,11 +11,14 @@ function App() {
   const [addArticle, setAddArticle] = useState(false);
   const [showProfile, openProfile] = useState(false);
   const [editProfile, changeProfileDetails] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
 
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
     console.log(isLoggedIn);
+    setAddArticle(false);
+    openProfile(false);
+    changeProfileDetails(false);
   }
 
   function changeCurrentUser() {
@@ -35,6 +38,8 @@ function App() {
 
     fetchData();
   }, []); // dependencies
+
+  console.log(articles);
 
   return (
     <div className="wrapper">
@@ -68,6 +73,7 @@ function App() {
           editProfile={editProfile}
           changeProfileDetails={changeProfileDetails}
           currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ) : (
         <FormToDisplay

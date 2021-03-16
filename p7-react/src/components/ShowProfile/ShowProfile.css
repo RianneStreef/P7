@@ -8,3 +8,7 @@
 .name {
   font-size: 1.5rem;
 }
+
+.profile-picture {
+  max-width: 200px;
+}
