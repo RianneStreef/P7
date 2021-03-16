@@ -11,10 +11,10 @@ function EditProfile(props) {
   // details as placeholders.
 
   const [userDetails, setUserDetails] = useState({
-    email: '',
+    email: currentUser.email,
     password: '',
-    first: '',
-    last: '',
+    first: currentUser.firstName,
+    last: currentUser.lastName,
     picture: '',
   });
 

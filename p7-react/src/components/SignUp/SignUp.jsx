@@ -7,7 +7,7 @@ function signUp(props) {
   const { isLoggedIn, setLoggedIn, currentUser, setCurrentUser } = props;
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState('');
+  const [isError, setError] = useState('');
 
   const [signUpDetails, setSignUpDetails] = useState({
     email: 'riannestreef@gmail.com',
@@ -29,22 +29,43 @@ function signUp(props) {
   };
 
   const handleSubmit = async (event) => {
-    setIsError('');
+    setError('');
     setIsLoading(true);
 
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/auth/signup', signUpDetails);
+      const res = await axios.post(
+        'http://localhost:3001/api/auth/signup',
+        signUpDetails
+      );
       setIsLoading(false);
       setLoggedIn(true);
 
-      setCurrentUser(email);
+      console.log(res);
+      console.log(res.body);
+
+      setCurrentUser(res.data.user);
     } catch (err) {
-      // console.log(err.response.data.message);
-      // if (err.response && err.response.data.message) {
-      //   setIsError(err.response.data.message);
-      //   // setIsError('Email is already taken');
-      // }
+      if (err?.response && err?.response?.data?.message) {
+        console.log(err?.response?.data?.message);
+        setError(err.response.data.message);
+      } else {
+        setError('Unknown error occurred');
+      }
+
+      // Handling different error messages
+      /* if (err?.response) {
+        if (err.status === 400) {
+          console.log('Error type 1');
+        } else if (err.status === 401) {
+          console.log('Error type 2');
+        } else if (err.status === 500) {
+          console.log('server error');
+        }
+        console.log('RESPONSE FOUND');
+      } else {
+        console.log('Unknown error');
+      } */
       setIsLoading(false);
     }
   };

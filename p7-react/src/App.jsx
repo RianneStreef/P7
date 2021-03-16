@@ -11,7 +11,7 @@ function App() {
   const [addArticle, setAddArticle] = useState(false);
   const [showProfile, openProfile] = useState(false);
   const [editProfile, changeProfileDetails] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
 
   function changeLogin() {
     setLoggedIn(!isLoggedIn);

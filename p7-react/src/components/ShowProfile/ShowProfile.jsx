@@ -23,13 +23,13 @@ function ShowProfile(props) {
     openProfile(!showProfile);
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log('loading user');
     const userDetails = async () => {
       console.log('contacting server for details');
       try {
         console.log('getting user');
-        console.log(currentUser);
+        console.log(userDetails);
 
         await axios.get('http://localhost:3001/api/auth/');
         console.log(userDetails);
@@ -38,7 +38,7 @@ function ShowProfile(props) {
       }
     };
     userDetails();
-  });
+  }); */
 
   return (
     <div className="card">
@@ -51,8 +51,8 @@ function ShowProfile(props) {
       <div className="profile-card">
         <div>
           <p className="name">
-            <span>Rianne</span>
-            <span>Streef</span>
+            <span>{currentUser.firstName}</span>
+            <span>{currentUser.lastName}</span>
           </p>
           <p>riannestreef@gmail.com</p>
         </div>
