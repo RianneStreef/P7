@@ -46,7 +46,7 @@ function ShowProfile(props) {
         </div>
       </div>
       <div className="button-container">
-        <button type="button" onClick={showEditProfile}>
+        <button className="text-button" type="button" onClick={showEditProfile}>
           Edit Profile
         </button>
       </div>

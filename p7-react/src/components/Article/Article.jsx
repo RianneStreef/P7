@@ -83,25 +83,19 @@ export default function displayArticles(props) {
               <h3>{article.title}</h3>
               <div>{article.description}</div>
             </a>
-            <button
-              onClick={() => handleLike(article.id)}
-              type="button"
-              className="icon-button"
-            >
-              <i className="far fa-thumbs-up" />
-            </button>
-            <span>{article.usersLiked ? article.usersLiked.length : 0}</span>
+            <div className="like-buttons">
+              <button onClick={() => handleLike(article.id)} type="button">
+                <i className="far fa-thumbs-up" />
+              </button>
+              <span>{article.usersLiked ? article.usersLiked.length : 0}</span>
 
-            <button
-              onClick={() => handleDislike(article.id)}
-              type="button"
-              className="icon-button"
-            >
-              <i className="far fa-thumbs-down" />
-            </button>
-            <span>
-              {article.usersDisliked ? article.usersDisliked.length : 0}
-            </span>
+              <button onClick={() => handleDislike(article.id)} type="button">
+                <i className="far fa-thumbs-down" />
+              </button>
+              <span>
+                {article.usersDisliked ? article.usersDisliked.length : 0}
+              </span>
+            </div>
           </div>
         ))}
     </div>

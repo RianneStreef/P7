@@ -118,6 +118,7 @@ app.post("/api/auth/signup", (req, res, next) => {
 
 app.delete("/api/auth/", (req, res, next) => {
   console.log("finding and deleting profile");
+  const id = req.params.id;
 
   con.query(`DELETE FROM Users WHERE id='${id}';`, function (err, result) {
     if (err) {

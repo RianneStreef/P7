@@ -24,6 +24,13 @@ function App() {
     setCurrentUser({});
   }
 
+  function logOut() {
+    changeLogin();
+    changeCurrentUser();
+    console.log(currentUser);
+    console.log('logged out');
+  }
+
   useEffect(() => {
     // Runs once. When it runs, it will call the fetchData()
     //    function.
@@ -52,11 +59,8 @@ function App() {
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
         changeCurrentUser={changeCurrentUser}
+        logOut={logOut}
       />
-
-      <button type="button" onClick={changeLogin}>
-        Change Login
-      </button>
 
       {isLoggedIn ? (
         <LoggedInDisplay
@@ -73,6 +77,7 @@ function App() {
           changeProfileDetails={changeProfileDetails}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          logOut={logOut}
         />
       ) : (
         <FormToDisplay
@@ -83,6 +88,10 @@ function App() {
           setCurrentUser={setCurrentUser}
         />
       )}
+
+      <button type="button" onClick={changeLogin}>
+        Change Login
+      </button>
     </div>
   );
 }

@@ -23,6 +23,10 @@ body {
   height: 100%;
 }
 
+.main {
+  margin-top: 100px;
+}
+
 p {
   margin: 0;
 }
@@ -65,7 +69,15 @@ input {
   align-items: center;
 }
 
-.button {
+button {
+  border: none;
+  background-color: transparent;
+}
+
+.text-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 10px;
   height: 30px;
   width: 100px;
@@ -82,30 +94,31 @@ input {
   -webkit-transition: all 0.3s ease;
 }
 
-.button:hover {
+.text-button:hover {
   transition: all 0.3s ease;
   background-color: var(--color-highlight);
 }
 
 .link-button {
-  background-color: none;
+  background-color: transparent;
+  text-decoration: underline;
+  margin: 20px;
 }
 
 .close-button {
-  background: none;
+  background-color: #fff;
+  border: none;
   color: #000000;
-  width: fit-content;
-}
-
-.close-button:hover {
-  background-color: #ffffff;
 }
 
 .icon-button {
-  background-color: var(--color-secondary);
-}
-
-.icon-button:hover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  font-size: 1.5rem;
 }
 
 .button-container {

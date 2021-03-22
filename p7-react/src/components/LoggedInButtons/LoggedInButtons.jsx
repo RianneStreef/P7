@@ -11,6 +11,7 @@ function LoggedInButtons(props) {
     currentUser,
     setCurrentUser,
     changeCurrentUser,
+    logOut,
   } = props;
 
   function setProfile() {
@@ -18,13 +19,6 @@ function LoggedInButtons(props) {
     console.log('Showing Profile');
     console.log(setLoggedIn);
     console.log(isLoggedIn);
-  }
-
-  function logOut() {
-    changeLogin();
-    changeCurrentUser();
-    console.log(currentUser);
-    console.log('logged out');
   }
 
   return (
@@ -36,18 +30,18 @@ function LoggedInButtons(props) {
       >
         {showProfile ? (
           <>
-            <p className="button hide-mobile">Articles</p>
+            <p className="text-button hide-mobile">Articles</p>
             <i className="icon-button hide-desktop fas fa-newspaper" />
           </>
         ) : (
           <>
-            <p className="button hide-mobile">Profile</p>
+            <p className="text-button hide-mobile">Profile</p>
             <i className="icon-button hide-desktop far fa-user" />
           </>
         )}
       </button>
       <button type="button" onClick={logOut} data-testid="test-button-sign-out">
-        <p className="button hide-mobile">Sign out</p>
+        <p className="text-button hide-mobile">Sign out</p>
         <i className="hide-desktop fas fa-sign-out-alt" />
       </button>
     </div>

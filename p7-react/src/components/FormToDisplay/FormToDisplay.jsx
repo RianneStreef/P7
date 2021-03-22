@@ -11,7 +11,7 @@ function FormToDisplay(props) {
     setCurrentUser,
   } = props;
   return (
-    <div>
+    <div className="main">
       {isSignedUp ? (
         <Login
           isLoggedIn={isLoggedIn}

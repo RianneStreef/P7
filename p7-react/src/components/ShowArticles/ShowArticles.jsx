@@ -19,8 +19,8 @@ function ShowArticles(props) {
       <div className="button-container-right">
         <button type="button" onClick={openAddArticle}>
           <>
-            <p className="hide-mobile">Add Article</p>
-            <i className="hide-desktop fas fa-folder-plus" />
+            <p className="text-button hide-mobile">Add Article</p>
+            <i className="icon-button hide-desktop fas fa-folder-plus" />
           </>
         </button>
       </div>

@@ -109,7 +109,9 @@ function AddArticle(props) {
             </div>
 
             <div className="button-container">
-              <button type="submit">Submit article</button>
+              <button className="text-button" type="submit">
+                Submit article
+              </button>
             </div>
           </form>
         </>

@@ -10,6 +10,7 @@ function Profile(props) {
     openProfile,
     currentUser,
     setCurrentUser,
+    logOut,
   } = props;
   return (
     <div>
@@ -20,6 +21,7 @@ function Profile(props) {
             changeProfileDetails={changeProfileDetails}
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
+            logOut={logOut}
           />
         ) : (
           <ShowProfile

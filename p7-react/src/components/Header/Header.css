@@ -8,8 +8,10 @@ header {
   top: 0;
   left: 0;
   width: -webkit-fill-available;
-  background-color: rgba(255, 251, 251, 0.798);
   height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .logo {
@@ -26,5 +28,15 @@ header {
 }
 
 .title {
+  background-color: rgba(255, 251, 251, 0.798);
+  height: 80px;
   font-size: 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
 }

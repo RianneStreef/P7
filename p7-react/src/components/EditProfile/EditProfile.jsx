@@ -5,10 +5,12 @@ import axios from 'axios';
 
 function EditProfile(props) {
   const {
+    openProfile,
     editProfile,
     changeProfileDetails,
     currentUser,
     setCurrentUser,
+    logOut,
   } = props;
 
   const [isError, setError] = useState('');
@@ -36,8 +38,10 @@ function EditProfile(props) {
     console.log('deleting profile');
     console.log(id);
     try {
-      axios.delete('http://localhost:3001/api/auth/', id);
+      axios.delete(`http://localhost:3001/api/auth/${id}`);
+      logOut();
     } catch (err) {
+      console.log(err);
       console.error('Error deleting');
     }
   };
@@ -59,6 +63,7 @@ function EditProfile(props) {
     event.preventDefault();
     try {
       axios.put('http://localhost:3001/api/auth/', currentUser);
+      openProfile(false);
     } catch (err) {
       console.error('Error submitting');
     }
@@ -145,8 +150,14 @@ function EditProfile(props) {
             )}
           </div>
           <div className="button-container">
-            <button type="submit">Save</button>
-            <button type="button" onClick={deleteProfile}>
+            <button className="text-button" type="submit">
+              Save
+            </button>
+            <button
+              className="text-button"
+              type="button"
+              onClick={deleteProfile}
+            >
               Delete
             </button>
           </div>

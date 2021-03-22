@@ -14,10 +14,11 @@ function LoggedInDisplay(props) {
     openProfile,
     currentUser,
     setCurrentUser,
+    logOut,
   } = props;
 
   return (
-    <div>
+    <div className="main">
       {showProfile ? (
         <Profile
           editProfile={editProfile}
@@ -26,6 +27,7 @@ function LoggedInDisplay(props) {
           changeProfileDetails={changeProfileDetails}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          logOut={logOut}
         />
       ) : (
         <ArticleDisplay
