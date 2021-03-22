@@ -63,14 +63,30 @@ app.get("/api/articles", (req, res, next) => {
   );
 });
 
+// app.get("api/articles", (req, res, next) => {
+//   con.query(
+//     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
+//     function (err, result) {
+//       if (err) {
+//         return res.status(400).json({
+//           message: "Unable to fetch articles",
+//         });
+//       }
+//       return res.status(200).json({
+//         articles: result,
+//       });
+//     }
+//   );
+// });
+
 app.post("/api/auth/signup", (req, res, next) => {
   console.log("signing up");
-  const { email, password, firstName, lastName } = req.body;
-  console.log(email, password, firstName, lastName);
+  const { email, password, firstName, lastName, articlesRead } = req.body;
+  console.log(email, password, firstName, lastName, articlesRead);
   con.query(
-    `INSERT INTO Users (firstName, lastName, email, password) VALUES ('${firstName}', '${lastName}', '${email}', '${password}');`,
+    `INSERT INTO Users (firstName, lastName, email, password, articlesRead) VALUES ('${firstName}', '${lastName}', '${email}', '${password}' ,'${articlesRead}');`,
     function (err, result) {
-      console.log(result);
+      console.log(chalk.magenta(result));
       console.log(result.insertId);
       if (err) {
         console.log(err);
@@ -94,7 +110,7 @@ app.post("/api/auth/signup", (req, res, next) => {
       }
 
       return res.status(200).json({
-        user: { email, firstName, lastName, id: result.insertId },
+        user: { email, firstName, lastName, articlesRead, id: result.insertId },
       });
     }
   );
@@ -102,8 +118,7 @@ app.post("/api/auth/signup", (req, res, next) => {
 
 app.delete("/api/auth/", (req, res, next) => {
   console.log("finding and deleting profile");
-  console.log("current user id = ");
-  console.log(id);
+
   con.query(`DELETE FROM Users WHERE id='${id}';`, function (err, result) {
     if (err) {
       return res.status(400).json({
@@ -118,41 +133,20 @@ app.delete("/api/auth/", (req, res, next) => {
 
 app.put("/api/auth/", (req, res, next) => {
   console.log("changing profile");
-  const { email, firstName, lastName } = req.body;
-  console.log(email, firstName, lastName);
-  con
-    .query
+  const { id, email, firstName, lastName, articlesRead } = req.body;
+  console.log(id, email, firstName, lastName, articlesRead);
+  con.query(
+    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`
+  );
+});
 
-    // `INSERT INTO Users (firstName, lastName, email, password) VALUES ('${firstName}', '${lastName}', '${email}', '${password}');`,
-    // function (err, result) {
-    //   console.log(result);
-    //   console.log(result.insertId);
-    //   if (err) {
-    //     console.log(err);
-    //     if (err.errno && err.errno === 1062) {
-    //       return res.status(400).json({
-    //         message: "Error. Duplicate email field",
-    //         field: "email",
-    //       });
-    //     }
-    //     // THIS IS FOR DEMO, TAKE OUT OR REWORK
-    //     // The field shows which control on frontend had an error
-    //     if (err.errno && err.errno === 9999999) {
-    //       return res.status(400).json({
-    //         message: "Error. Username invalid syntax",
-    //         field: "username",
-    //       });
-    //     }
-    //     return res.status(500).json({
-    //       message: "Unknown error",
-    //     });
-    //   }
-
-    //   return res.status(200).json({
-    //     user: { email, firstName, lastName, id: result.insertId },
-    //   });
-    // }
-    ();
+app.put("/api/articles/", (req, res, next) => {
+  console.log("liking");
+  const { id, usersLiked, usersDisliked } = req.body;
+  console.log(id, usersLiked, usersDisliked);
+  con.query(
+    `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`
+  );
 });
 
 // app.get("/api/auth/", (req, res, next) => {

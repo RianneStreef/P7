@@ -25,6 +25,7 @@ function LoggedInDisplay(props) {
           openProfile={openProfile}
           changeProfileDetails={changeProfileDetails}
           currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       ) : (
         <ArticleDisplay

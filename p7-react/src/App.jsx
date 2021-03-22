@@ -15,14 +15,13 @@ function App() {
 
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
-    console.log(isLoggedIn);
     setAddArticle(false);
     openProfile(false);
     changeProfileDetails(false);
   }
 
   function changeCurrentUser() {
-    setCurrentUser('');
+    setCurrentUser({});
   }
 
   useEffect(() => {

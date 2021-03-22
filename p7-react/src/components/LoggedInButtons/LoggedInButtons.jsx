@@ -1,4 +1,5 @@
 import React from 'react';
+import './LoggedInButtons.css';
 
 function LoggedInButtons(props) {
   const {
@@ -33,11 +34,21 @@ function LoggedInButtons(props) {
         onClick={setProfile}
         data-testid="test-button-profile"
       >
-        {' '}
-        {showProfile ? <p>Articles</p> : <p>Profile</p>}
+        {showProfile ? (
+          <>
+            <p className="button hide-mobile">Articles</p>
+            <i className="icon-button hide-desktop fas fa-newspaper" />
+          </>
+        ) : (
+          <>
+            <p className="button hide-mobile">Profile</p>
+            <i className="icon-button hide-desktop far fa-user" />
+          </>
+        )}
       </button>
       <button type="button" onClick={logOut} data-testid="test-button-sign-out">
-        Sign Out
+        <p className="button hide-mobile">Sign out</p>
+        <i className="hide-desktop fas fa-sign-out-alt" />
       </button>
     </div>
   );

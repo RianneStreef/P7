@@ -65,10 +65,10 @@ input {
   align-items: center;
 }
 
-button {
+.button {
   margin: 10px;
-  width: 100px;
   height: 30px;
+  width: 100px;
   font-family: 'Fira Sans', sans-serif;
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
@@ -82,9 +82,13 @@ button {
   -webkit-transition: all 0.3s ease;
 }
 
-button:hover {
+.button:hover {
   transition: all 0.3s ease;
   background-color: var(--color-highlight);
+}
+
+.link-button {
+  background-color: none;
 }
 
 .close-button {
@@ -98,11 +102,10 @@ button:hover {
 }
 
 .icon-button {
-  color: #000000;
+  background-color: var(--color-secondary);
 }
 
 .icon-button:hover {
-  background-color: #ffffff;
 }
 
 .button-container {

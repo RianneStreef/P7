@@ -11,7 +11,7 @@ function AddArticle(props) {
     title: 'New Article',
     description: 'My article',
     url: 'www.google.com',
-    usersLiked: [],
+    usersLiked: [1, 2, 3],
     usersDisliked: [],
   });
 
@@ -44,12 +44,13 @@ function AddArticle(props) {
 
     event.preventDefault();
     try {
+      console.log(articleDetails);
       await axios.post('http://localhost:3001/api/articles/', articleDetails);
       fetchData();
       setIsLoading(false);
       setAddArticle(false);
     } catch (err) {
-      console.error('Error logging in');
+      console.error('Error posting article');
       setIsLoading(false);
     }
   };

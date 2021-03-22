@@ -59,7 +59,9 @@ function Login() {
           </label>
         </div>
         <div className="button-container">
-          <button type="submit">Log in</button>
+          <button className="button" type="submit">
+            Log in
+          </button>
         </div>
       </form>
     </div>

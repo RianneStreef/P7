@@ -25,23 +25,6 @@ function ShowProfile(props) {
     openProfile(!showProfile);
   }
 
-  // useEffect(() => {
-  //   console.log('loading user');
-  //   const userDetails = async () => {
-  //     console.log('contacting server for details');
-  //     try {
-  //       console.log('getting user');
-  //       console.log(currentUser);
-
-  //       await axios.get('http://localhost:3001/api/auth/');
-  //       console.log(userDetails);
-  //     } catch (err) {
-  //       console.log('cant get user');
-  //     }
-  //   };
-  //   userDetails();
-  // });
-
   return (
     <div className="card">
       <div className="cardTitle">

@@ -4,10 +4,10 @@ import Article from '../Article/Article';
 function ShowArticles(props) {
   const {
     articles,
+    setArticle,
     addArticle,
     setAddArticle,
     currentUser,
-    setCurrentUser,
   } = props;
 
   function openAddArticle() {
@@ -18,21 +18,17 @@ function ShowArticles(props) {
     <div className="article-display">
       <div className="button-container-right">
         <button type="button" onClick={openAddArticle}>
-          Add Article
+          <>
+            <p className="hide-mobile">Add Article</p>
+            <i className="hide-desktop fas fa-folder-plus" />
+          </>
         </button>
       </div>
-      {articles.map((article) => (
-        <Article
-          key={article.id}
-          title={article.title}
-          description={article.description}
-          usersLiked={article.usersLiked}
-          usersDisliked={article.usersDisliked}
-          articles={articles}
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-        />
-      ))}
+      <Article
+        articles={articles}
+        setArticle={setArticle}
+        currentUser={currentUser}
+      />
     </div>
   );
 }

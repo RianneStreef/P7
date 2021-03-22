@@ -26,11 +26,22 @@ function Header(props) {
       <div className="title">Connect - E</div>
       {!isLoggedIn ? (
         <button
+          className="button"
           type="button"
           onClick={changeSignUp}
           data-testid="button-header"
         >
-          {isSignedUp ? <p>Sign Up</p> : <p>Log In</p>}
+          {isSignedUp ? (
+            <>
+              <p className="button hide-mobile">Sign Up</p>
+              <i className="icon-button hide-desktop fas fa-user-plus" />
+            </>
+          ) : (
+            <>
+              <p className="button hide-mobile">Log In</p>
+              <i className="icon-button hide-desktop fas fa-sign-in-alt" />
+            </>
+          )}
         </button>
       ) : (
         <LoggedInButtons

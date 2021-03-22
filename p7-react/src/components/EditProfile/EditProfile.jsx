@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import './EditProfile.css';
 import axios from 'axios';
 // import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 function EditProfile(props) {
-  const { editProfile, changeProfileDetails, currentUser } = props;
+  const {
+    editProfile,
+    changeProfileDetails,
+    currentUser,
+    setCurrentUser,
+  } = props;
 
   const [isError, setError] = useState('');
   const [changePassword, setChangePassword] = useState('');
-
-  // somehow get info by id from DB, and set userDetails with this. Use these
-  // details as placeholders.
 
   const [userDetails, setUserDetails] = useState({
     email: currentUser.email,
@@ -19,7 +22,7 @@ function EditProfile(props) {
     // picture: '',
   });
 
-  const { email, firstName, lastName, id } = userDetails;
+  const { email, firstName, lastName, id } = currentUser;
 
   function closeEditProfile() {
     changeProfileDetails(!editProfile);
@@ -29,35 +32,35 @@ function EditProfile(props) {
     setChangePassword(!changePassword);
   }
 
-  const handleInput = (event) => {
-    setUserDetails((prevState) => {
-      const changingDetails = {
-        ...prevState,
-        [event.target.name]: event.target.value,
-      };
-      return changingDetails;
-    });
-  };
-
-  const handleSubmit = (event) => {
-    console.log('sending new profile');
-    console.log(userDetails);
-
-    event.preventDefault();
-    try {
-      axios.put('http://localhost:3001/api/auth/', userDetails);
-    } catch (err) {
-      console.error('Error submitting');
-    }
-  };
-
-  const deleteProfile = (event) => {
+  const deleteProfile = async () => {
     console.log('deleting profile');
     console.log(id);
     try {
       axios.delete('http://localhost:3001/api/auth/', id);
     } catch (err) {
       console.error('Error deleting');
+    }
+  };
+
+  const handleInput = (event) => {
+    setCurrentUser((prevState) => {
+      const newCurrentUserDetails = {
+        ...prevState,
+        [event.target.name]: event.target.value,
+      };
+      return newCurrentUserDetails;
+    });
+  };
+
+  const handleSubmit = (event) => {
+    console.log('sending new profile');
+    console.log(currentUser);
+
+    event.preventDefault();
+    try {
+      axios.put('http://localhost:3001/api/auth/', currentUser);
+    } catch (err) {
+      console.error('Error submitting');
     }
   };
 
@@ -68,9 +71,7 @@ function EditProfile(props) {
 
         <div className="cardTitle">
           <h1>Edit Profile</h1>
-          <button type="button" onClick={deleteProfile}>
-            Delete Profile
-          </button>
+
           <button
             className="close-button"
             type="button"
@@ -81,19 +82,6 @@ function EditProfile(props) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">
-              <input
-                placeholder="email"
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={handleInput}
-              />
-            </label>
-          </div>
-
           <div className="form-group">
             <label htmlFor="firstName">
               <input
@@ -130,35 +118,38 @@ function EditProfile(props) {
             />
           </label>
         </div> */}
+          <div>
+            <div className="button-container">
+              <button
+                className="link-button"
+                type="button"
+                onClick={openChangePassword}
+              >
+                I would like to change my password
+              </button>
+            </div>
 
+            {changePassword && (
+              <div className="form-group">
+                <label htmlFor="password">
+                  <input
+                    placeholder="new password"
+                    type="text"
+                    id="password"
+                    name="password"
+                    // value={password}
+                    onChange={handleInput}
+                  />
+                </label>
+              </div>
+            )}
+          </div>
           <div className="button-container">
             <button type="submit">Save</button>
-          </div>
-        </form>
-      </div>
-
-      <div className="card">
-        <form>
-          <div className="button-container">
-            <button type="button" onClick={openChangePassword}>
-              Change Password
+            <button type="button" onClick={deleteProfile}>
+              Delete
             </button>
           </div>
-
-          {changePassword && (
-            <div className="form-group">
-              <label htmlFor="password">
-                <input
-                  placeholder="new password"
-                  type="text"
-                  id="password"
-                  name="password"
-                  // value={password}
-                  onChange={handleInput}
-                />
-              </label>
-            </div>
-          )}
         </form>
       </div>
     </>
