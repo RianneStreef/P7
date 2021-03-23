@@ -15,3 +15,7 @@
 .like-buttons {
   margin-top: 10px;
 }
+
+.read {
+  background-color: var(--color-secondary);
+}

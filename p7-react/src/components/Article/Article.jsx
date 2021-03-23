@@ -55,7 +55,7 @@ export default function displayArticles(props) {
   };
 
   async function setArticleToRead(articleId) {
-    console.log('set aricle to read');
+    console.log('set article to read');
     if (articlesRead === null) {
       articlesRead = [];
       articlesRead.push(articleId);
@@ -73,7 +73,12 @@ export default function displayArticles(props) {
     <div>
       {articles &&
         articles.map((article) => (
-          <div className="card articleCard">
+          <div id="article" className="card articleCard">
+            {/* This needs to be a function in here with something like: 
+          map -> if article id is in articlesRead, then, add 
+          className read to div 
+           */}
+
             <a
               href="http://www.google.com"
               target="_blank"
