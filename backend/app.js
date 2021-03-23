@@ -1,41 +1,41 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 
-const mysql = require("mysql");
-const chalk = require("chalk");
-const axios = require("axios").default;
-const cors = require("cors");
+const mysql = require('mysql');
+const chalk = require('chalk');
+const axios = require('axios').default;
+const cors = require('cors');
 
-const path = require("path");
+const path = require('path');
 
-const articleRoutes = require("./routes/article");
-const userRoutes = require("./routes/user");
+const articleRoutes = require('./routes/article');
+const userRoutes = require('./routes/user');
 
-require("dotenv").config();
+require('dotenv').config();
 
 const con = mysql.createConnection({
-  host: "remotemysql.com",
+  host: 'remotemysql.com',
   user: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
-  database: "OXgD76ZhvJ",
+  database: 'OXgD76ZhvJ',
 });
 
 con.connect(function (err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log('Connected!');
 });
 
 app.use(cors({ origin: true, credentials: true }));
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
   );
   res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, PATCH, OPTIONS',
   );
   next();
 });
@@ -47,19 +47,19 @@ app.use(express.json());
 // app.use("/api/articles", articleRoutes);
 // app.use('/api/auth', userRoutes);
 
-app.get("/api/articles", (req, res, next) => {
+app.get('/api/articles', (req, res, next) => {
   con.query(
-    "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
+    'SELECT * FROM articles ORDER BY id DESC LIMIT 10',
     function (err, result) {
       if (err) {
         return res.status(400).json({
-          message: "Unable to fetch articles",
+          message: 'Unable to fetch articles',
         });
       }
       return res.status(200).json({
         articles: result,
       });
-    }
+    },
   );
 });
 
@@ -79,8 +79,8 @@ app.get("/api/articles", (req, res, next) => {
 //   );
 // });
 
-app.post("/api/auth/signup", (req, res, next) => {
-  console.log("signing up");
+app.post('/api/auth/signup', (req, res, next) => {
+  console.log('signing up');
   const { email, password, firstName, lastName, articlesRead } = req.body;
   console.log(email, password, firstName, lastName, articlesRead);
   con.query(
@@ -92,62 +92,65 @@ app.post("/api/auth/signup", (req, res, next) => {
         console.log(err);
         if (err.errno && err.errno === 1062) {
           return res.status(400).json({
-            message: "Error. Duplicate email field",
-            field: "email",
+            message: 'Error. Duplicate email field',
+            field: 'email',
           });
         }
         // THIS IS FOR DEMO, TAKE OUT OR REWORK
         // The field shows which control on frontend had an error
         if (err.errno && err.errno === 9999999) {
           return res.status(400).json({
-            message: "Error. Username invalid syntax",
-            field: "username",
+            message: 'Error. Username invalid syntax',
+            field: 'username',
           });
         }
         return res.status(500).json({
-          message: "Unknown error",
+          message: 'Unknown error',
         });
       }
 
       return res.status(200).json({
         user: { email, firstName, lastName, articlesRead, id: result.insertId },
       });
-    }
+    },
   );
 });
 
-app.delete("/api/auth/", (req, res, next) => {
-  console.log("finding and deleting profile");
+app.delete('/api/auth/', (req, res, next) => {
+  console.log('finding and deleting profile');
   const id = req.params.id;
 
   con.query(`DELETE FROM Users WHERE id='${id}';`, function (err, result) {
     if (err) {
       return res.status(400).json({
-        message: "Unable to delete profile",
+        message: 'Unable to delete profile',
       });
     }
     return res.status(200).json({
-      message: "Profile deleted",
+      message: 'Profile deleted',
     });
   });
 });
 
-app.put("/api/auth/", (req, res, next) => {
-  console.log("changing profile");
+app.put('/api/auth/', (req, res, next) => {
+  console.log('changing profile');
   const { id, email, firstName, lastName, articlesRead } = req.body;
   console.log(id, email, firstName, lastName, articlesRead);
   con.query(
-    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`
+    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`,
   );
 });
 
-app.put("/api/articles/", (req, res, next) => {
-  console.log("liking");
+app.put('/api/articles/', (req, res, next) => {
+  console.log('liking');
   const { id, usersLiked, usersDisliked } = req.body;
+  console.log('usersLiked');
+  console.log(usersLiked);
   console.log(id, usersLiked, usersDisliked);
-  con.query(
-    `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`
-  );
+  const queryString = `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`;
+  console.log(queryString);
+  con.query(queryString);
+  res.status(200).send({ message: 'okay' });
 });
 
 // app.get("/api/auth/", (req, res, next) => {
@@ -176,8 +179,8 @@ app.put("/api/articles/", (req, res, next) => {
 //   );
 // });
 
-app.post("/api/articles", (req, res, next) => {
-  console.log("start");
+app.post('/api/articles', (req, res, next) => {
+  console.log('start');
   const { title, description, url } = req.body;
   console.log(title, description, url);
   con.query(
@@ -187,18 +190,18 @@ app.post("/api/articles", (req, res, next) => {
         console.log(err);
         if (err.errno && err.errno === 1062) {
           return res.status(400).json({
-            message: "Error. Duplicate email field",
+            message: 'Error. Duplicate email field',
           });
         }
         return res.status(500).json({
-          message: "Unknown error",
+          message: 'Unknown error',
         });
       }
 
       return res.status(200).json({
-        message: "success",
+        message: 'success',
       });
-    }
+    },
   );
 });
 
