@@ -55,13 +55,14 @@ function EditProfile(props) {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     console.log('sending new profile');
     console.log(currentUser);
 
     event.preventDefault();
     try {
-      axios.put(`http://localhost:3001/api/auth/`, currentUser);
+      console.log('contacting db');
+      await axios.put(`http://localhost:3001/api/auth/`, currentUser);
       openProfile(false);
     } catch (err) {
       console.error('Error submitting');

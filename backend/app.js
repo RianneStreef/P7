@@ -74,8 +74,10 @@ app.get("/api/articles", (req, res, next) => {
   // });
 });
 
-app.get(`api/articles/:id`, (req, res, next) => {
-  const { id } = req.body;
+app.get("api/articles/:id", (req, res, next) => {
+  console.log("searching for article");
+  console.log(req.params.id);
+  const id = req.params.id;
   con.query(
     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
     function (err, result) {
@@ -85,7 +87,7 @@ app.get(`api/articles/:id`, (req, res, next) => {
         });
       }
       return res.status(200).json({
-        articles: result,
+        currentArticle: result,
       });
     }
   );

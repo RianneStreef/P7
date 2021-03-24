@@ -16,9 +16,6 @@ function LoggedInButtons(props) {
 
   function setProfile() {
     openProfile(!showProfile);
-    console.log('Showing Profile');
-    console.log(setLoggedIn);
-    console.log(isLoggedIn);
   }
 
   return (

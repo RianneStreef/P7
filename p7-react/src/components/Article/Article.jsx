@@ -50,23 +50,22 @@ export default function displayArticles(props) {
   }
 
   async function updateCurrentArticle(currentArticleId) {
+    console.log(currentArticleId);
     console.log('getting current article');
     try {
       const res = await axios.get(
-        `http://localhost:3001/api/articles/${currentArticleId}`,
-        currentArticle.id
+        `http://localhost:3001/api/articles/${currentArticleId}`
       );
       console.log('getting article info');
       console.log(res);
     } catch (err) {
       console.log('cant get current article info');
-      console.log(err);
     }
   }
 
   const handleLike = async (article) => {
     currentArticle.id = article.id;
-    // await updateCurrentArticle(currentArticle.id);
+    await updateCurrentArticle(currentArticle.id);
 
     if (!usersLiked.includes(currentUser.id)) {
       usersLiked.push(currentUser.id);
@@ -97,18 +96,15 @@ export default function displayArticles(props) {
   };
 
   async function setArticleToRead(articleId) {
-    console.log(articleId);
     console.log('set article to read');
+
     if (articlesRead === null) {
       articlesRead = [];
     }
     if (!articlesRead.includes(articleId)) {
-      console.log('adding article');
       articlesRead.push(articleId);
-      console.log(articlesRead);
 
       try {
-        console.log(currentUser);
         await axios.put('http://localhost:3001/api/auth/', currentUser);
         fetchData();
       } catch (err) {
