@@ -4,68 +4,116 @@ import axios from 'axios';
 
 export default function displayArticles(props) {
   const { articles, setArticles, currentUser } = props;
-  // eslint-disable-next-line prefer-const
-  //  let { usersLiked, usersDisliked } = articles;
   let { articlesRead } = currentUser;
+  if (!articlesRead) {
+    articlesRead = [];
+  }
 
   const [currentArticle, setCurrentArticle] = useState({
     id: '',
     usersLiked: [],
-    usersDisliked: [1, 2, 3],
+    usersDisliked: [],
+    // This id needs to be used to find that one article and set
+    // usersLiked and usersDisliked, otherwise it will be overwritten
+    // anytime it is reset
+
+    // So when the id is set --> axios get this one article, and set usersLiked
+    // and
   });
 
-  const { id, usersLiked, usersDisliked } = currentArticle;
+  const { id } = currentArticle;
+  let { usersLiked, usersDisliked } = currentArticle;
+  if (usersLiked === null) {
+    usersLiked = [];
+  }
+  if (usersDisliked === null) {
+    usersDisliked = [];
+  }
 
-  console.log('current user: ');
-  console.log(currentUser);
+  console.log('usersLiked');
+  console.log(usersLiked);
+
+  console.log('current article: ');
+  console.log(currentArticle);
 
   // console.log(articles[0].usersLiked);
 
   function fetchData() {
     console.log('fetching data');
-    fetch('http://localhost:3001/api/articles')
-      .then((response) => response.json())
-      .then((json) => setArticles(json.articles));
+    try {
+      fetch('http://localhost:3001/api/articles')
+        .then((response) => response.json())
+        .then((json) => setArticles(json.articles));
+    } catch {
+      // try again?!
+    }
   }
 
-  const handleLike = async (articleId) => {
-    console.log(articleId);
-    currentArticle.id = articleId;
-    currentArticle.usersLiked.push(currentUser.id);
-    console.log(currentArticle.usersLiked.length);
-    console.log(currentArticle);
+  async function updateCurrentArticle(currentArticleId) {
+    console.log('getting current article');
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/api/articles/${currentArticleId}`,
+        currentArticle.id
+      );
+      console.log('getting article info');
+      console.log(res);
+    } catch (err) {
+      console.log('cant get current article info');
+      console.log(err);
+    }
+  }
+
+  const handleLike = async (article) => {
+    currentArticle.id = article.id;
+    // await updateCurrentArticle(currentArticle.id);
+
+    if (!usersLiked.includes(currentUser.id)) {
+      usersLiked.push(currentUser.id);
+    }
     try {
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
-      console.log('fetch data');
+      console.log('updating article');
       fetchData();
+      console.log('fetch data');
     } catch (err) {
       console.error('Could not like');
     }
   };
 
-  const handleDislike = async (articleId) => {
-    // setCurrentArticle(article);
-    // console.log(currentArticle);
-    // usersLiked.push(currentUser.id);
-    // try {
-    //   await axios.put('http://localhost:3001/api/articles/');
-    // } catch (err) {
-    //   console.error('Could not dislike');
-    // }
+  const handleDislike = async (article) => {
+    currentArticle.id = article.id;
+    if (!usersDisliked.includes(currentUser.id)) {
+      currentArticle.usersDisliked.push(currentUser.id);
+    }
+    try {
+      await axios.put('http://localhost:3001/api/articles/', currentArticle);
+      console.log('updating article');
+      fetchData();
+      console.log('fetch data');
+    } catch (err) {
+      console.error('Could not dislike');
+    }
   };
 
   async function setArticleToRead(articleId) {
+    console.log(articleId);
     console.log('set article to read');
     if (articlesRead === null) {
       articlesRead = [];
-      articlesRead.push(articleId);
-    } else {
-      articlesRead.push(articleId);
     }
-    try {
-      await axios.put('http://localhost:3001/api/auth/', currentUser);
-    } catch (err) {
-      console.error('Could not mark as read');
+    if (!articlesRead.includes(articleId)) {
+      console.log('adding article');
+      articlesRead.push(articleId);
+      console.log(articlesRead);
+
+      try {
+        console.log(currentUser);
+        await axios.put('http://localhost:3001/api/auth/', currentUser);
+        fetchData();
+      } catch (err) {
+        console.error('Could not mark as read');
+      }
     }
   }
 
@@ -73,12 +121,13 @@ export default function displayArticles(props) {
     <div>
       {articles &&
         articles.map((article) => (
-          <div id="article" className="card articleCard">
-            {/* This needs to be a function in here with something like: 
-          map -> if article id is in articlesRead, then, add 
-          className read to div 
-           */}
-
+          <div
+            id="article"
+            className={`card articleCard ${
+              articlesRead.includes(article.id) ? 'read' : ''
+            }`}
+            key={article.id}
+          >
             <a
               href="http://www.google.com"
               target="_blank"
@@ -89,13 +138,21 @@ export default function displayArticles(props) {
               <div>{article.description}</div>
             </a>
             <div className="like-buttons">
-              <button onClick={() => handleLike(article.id)} type="button">
-                <i className="far fa-thumbs-up" />
+              <button onClick={() => handleLike(article)} type="button">
+                <i
+                  className={`far fa-thumbs-up ${
+                    usersLiked.includes(currentUser.id) ? 'liked' : ''
+                  }`}
+                />
               </button>
               <span>{article.usersLiked ? article.usersLiked.length : 0}</span>
 
-              <button onClick={() => handleDislike(article.id)} type="button">
-                <i className="far fa-thumbs-down" />
+              <button onClick={() => handleDislike(article)} type="button">
+                <i
+                  className={`far fa-thumbs-down ${
+                    usersDisliked.includes(currentUser.id) ? 'disliked' : ''
+                  }`}
+                />
               </button>
               <span>
                 {article.usersDisliked ? article.usersDisliked.length : 0}

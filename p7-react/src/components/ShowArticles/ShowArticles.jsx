@@ -4,7 +4,7 @@ import Article from '../Article/Article';
 function ShowArticles(props) {
   const {
     articles,
-    setArticle,
+    setArticles,
     addArticle,
     setAddArticle,
     currentUser,
@@ -26,7 +26,7 @@ function ShowArticles(props) {
       </div>
       <Article
         articles={articles}
-        setArticle={setArticle}
+        setArticles={setArticles}
         currentUser={currentUser}
       />
     </div>

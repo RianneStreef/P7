@@ -4,11 +4,29 @@
   margin-right: auto;
 }
 
+a {
+  color: #000000;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #000000;
+  text-decoration: none;
+}
+
 .fa-thumbs-up:hover {
   color: greenyellow;
 }
 
+.liked {
+  color: greenyellow;
+}
+
 .fa-thumbs-down:hover {
+  color: red;
+}
+
+.disliked {
   color: red;
 }
 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './EditProfile.css';
 import axios from 'axios';
-// import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 function EditProfile(props) {
   const {
@@ -38,7 +37,7 @@ function EditProfile(props) {
     console.log('deleting profile');
     console.log(id);
     try {
-      axios.delete(`http://localhost:3001/api/auth/${id}`);
+      await axios.delete(`http://localhost:3001/api/auth/${id}`);
       logOut();
     } catch (err) {
       console.log(err);
@@ -62,7 +61,7 @@ function EditProfile(props) {
 
     event.preventDefault();
     try {
-      axios.put('http://localhost:3001/api/auth/', currentUser);
+      axios.put(`http://localhost:3001/api/auth/`, currentUser);
       openProfile(false);
     } catch (err) {
       console.error('Error submitting');

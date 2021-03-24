@@ -42,7 +42,7 @@ function LoggedInButtons(props) {
       </button>
       <button type="button" onClick={logOut} data-testid="test-button-sign-out">
         <p className="text-button hide-mobile">Sign out</p>
-        <i className="hide-desktop fas fa-sign-out-alt" />
+        <i className="icon-button hide-desktop fas fa-sign-out-alt" />
       </button>
     </div>
   );

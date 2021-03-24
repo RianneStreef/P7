@@ -35,8 +35,8 @@ function App() {
     // Runs once. When it runs, it will call the fetchData()
     //    function.
     // fetchData() function will add the API call data to your state
-    function fetchData() {
-      console.log('articles fetched');
+    function fetchData(req, res, err) {
+      console.log('fetching articles');
       fetch('http://localhost:3001/api/articles')
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));

@@ -13,14 +13,14 @@ const userRoutes = require("./routes/user");
 
 require("dotenv").config();
 
-const con = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "remotemysql.com",
   user: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: "OXgD76ZhvJ",
 });
 
-con.connect(function (err) {
+connection.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -48,8 +48,36 @@ app.use(express.json());
 // app.use('/api/auth', userRoutes);
 
 app.get("/api/articles", (req, res, next) => {
-  con.query(
+  // connection.connect() {
+  //   if (error) {
+  //     throw error;
+  //   }
+  connection.query(
     "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
+    function (error, result) {
+      if (error) {
+        return res.status(400).json({
+          message: "Unable to fetch articles",
+        });
+      }
+      return res.status(200).json({
+        articles: result,
+      });
+    }
+  );
+  // connection.end((error) => {
+  //   console.log("Closed connection");
+  //   if (error) {
+  //     throw error;
+  //   }
+  // });
+  // });
+});
+
+app.get(`api/articles/:id`, (req, res, next) => {
+  const { id } = req.body;
+  con.query(
+    `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
     function (err, result) {
       if (err) {
         return res.status(400).json({
@@ -63,27 +91,11 @@ app.get("/api/articles", (req, res, next) => {
   );
 });
 
-// app.get("api/articles", (req, res, next) => {
-//   con.query(
-//     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
-//     function (err, result) {
-//       if (err) {
-//         return res.status(400).json({
-//           message: "Unable to fetch articles",
-//         });
-//       }
-//       return res.status(200).json({
-//         articles: result,
-//       });
-//     }
-//   );
-// });
-
 app.post("/api/auth/signup", (req, res, next) => {
   console.log("signing up");
   const { email, password, firstName, lastName, articlesRead } = req.body;
   console.log(email, password, firstName, lastName, articlesRead);
-  con.query(
+  connection.query(
     `INSERT INTO Users (firstName, lastName, email, password, articlesRead) VALUES ('${firstName}', '${lastName}', '${email}', '${password}' ,'${articlesRead}');`,
     function (err, result) {
       console.log(chalk.magenta(result));
@@ -116,37 +128,60 @@ app.post("/api/auth/signup", (req, res, next) => {
   );
 });
 
-app.delete("/api/auth/", (req, res, next) => {
-  console.log("finding and deleting profile");
+app.delete("/api/auth/:id", (req, res, next) => {
+  console.log(req.params.id);
   const id = req.params.id;
 
-  con.query(`DELETE FROM Users WHERE id='${id}';`, function (err, result) {
-    if (err) {
-      return res.status(400).json({
-        message: "Unable to delete profile",
+  connection.query(
+    `DELETE FROM Users WHERE id='${id}';`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to delete profile",
+        });
+      }
+      return res.status(200).json({
+        message: "Profile deleted",
       });
     }
-    return res.status(200).json({
-      message: "Profile deleted",
-    });
-  });
+  );
 });
 
 app.put("/api/auth/", (req, res, next) => {
-  console.log("changing profile");
+  console.log("updating profile");
   const { id, email, firstName, lastName, articlesRead } = req.body;
   console.log(id, email, firstName, lastName, articlesRead);
-  con.query(
-    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`
+  connection.query(
+    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to update profile",
+        });
+      }
+      return res.status(200).json({
+        message: "Profile updated",
+      });
+    }
   );
 });
 
 app.put("/api/articles/", (req, res, next) => {
-  console.log("liking");
+  console.log("updating article");
   const { id, usersLiked, usersDisliked } = req.body;
   console.log(id, usersLiked, usersDisliked);
-  con.query(
-    `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`
+  connection.query(
+    `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to update article",
+        });
+      }
+      return res.status(200).json({
+        message: "Article updated",
+      });
+    }
   );
 });
 
@@ -180,7 +215,7 @@ app.post("/api/articles", (req, res, next) => {
   console.log("start");
   const { title, description, url } = req.body;
   console.log(title, description, url);
-  con.query(
+  connection.query(
     `INSERT INTO articles (title, description, url) VALUES ('${title}', '${description}', '${url}');`,
     function (err, result) {
       if (err) {
