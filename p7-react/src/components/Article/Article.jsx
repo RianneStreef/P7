@@ -23,6 +23,7 @@ export default function displayArticles(props) {
 
   const { id } = currentArticle;
   let { usersLiked, usersDisliked } = currentArticle;
+
   if (usersLiked === null) {
     usersLiked = [];
   }
@@ -58,17 +59,31 @@ export default function displayArticles(props) {
       );
       console.log('getting article info');
       console.log(res);
+      console.log(res.data.articleUpdate[0].usersLiked);
+      usersLiked = res.data.articleUpdate[0].usersLiked;
+      console.log(typeof res.data.articleUpdate[0].usersLiked);
+      usersDisliked = res.data.articleUpdate.usersDisliked;
+      if (usersLiked === null) {
+        usersLiked = [];
+      }
+      if (usersDisliked === null) {
+        usersDisliked = [];
+      }
+      console.log(typeof usersLiked);
     } catch (err) {
       console.log('cant get current article info');
     }
+    console.log(currentArticle);
+    return currentArticle;
   }
 
   const handleLike = async (article) => {
     currentArticle.id = article.id;
     await updateCurrentArticle(currentArticle.id);
 
-    if (!usersLiked.includes(currentUser.id)) {
-      usersLiked.push(currentUser.id);
+    if (!currentArticle.usersLiked.includes(currentUser.id)) {
+      currentArticle.usersLiked.push(currentUser.id);
+      console.log(currentArticle.usersLiked);
     }
     try {
       await axios.put('http://localhost:3001/api/articles/', currentArticle);

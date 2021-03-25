@@ -47,7 +47,7 @@ app.use(express.json());
 // app.use("/api/articles", articleRoutes);
 // app.use('/api/auth', userRoutes);
 
-app.get("/api/articles", (req, res, next) => {
+app.get("/api/articles/", (req, res, next) => {
   // connection.connect() {
   //   if (error) {
   //     throw error;
@@ -74,11 +74,11 @@ app.get("/api/articles", (req, res, next) => {
   // });
 });
 
-app.get("api/articles/:id", (req, res, next) => {
+app.get("/api/articles/:id", (req, res, next) => {
   console.log("searching for article");
   console.log(req.params.id);
   const id = req.params.id;
-  con.query(
+  connection.query(
     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
     function (err, result) {
       if (err) {
@@ -87,7 +87,7 @@ app.get("api/articles/:id", (req, res, next) => {
         });
       }
       return res.status(200).json({
-        currentArticle: result,
+        articleUpdate: result,
       });
     }
   );
