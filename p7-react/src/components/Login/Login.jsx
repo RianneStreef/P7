@@ -10,6 +10,12 @@ function Login() {
 
   const { email, password } = userDetails;
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  function displayPassword() {
+    setShowPassword(!showPassword);
+  }
+
   const handleInput = (event) => {
     setUserDetails((prevState) => {
       const loginDetails = {
@@ -46,17 +52,31 @@ function Login() {
             />
           </label>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">
-            <input
-              placeholder="password"
-              type="text"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handleInput}
-            />
-          </label>
+        <div className="password-button">
+          <div className="form-group">
+            <label htmlFor="password">
+              <input
+                placeholder="password"
+                type="text"
+                id="password"
+                name="password"
+                className={`${!showPassword ? 'password' : 'password-input'}`}
+                value={password}
+                onChange={handleInput}
+              />
+            </label>
+          </div>
+          <button
+            className="eye-button"
+            type="button"
+            onClick={displayPassword}
+          >
+            {!showPassword ? (
+              <i className="fas fa-eye" />
+            ) : (
+              <i className="fas fa-eye-slash" />
+            )}
+          </button>
         </div>
         <div className="button-container">
           <button className="text-button" type="submit">

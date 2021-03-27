@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const chalk = require("chalk");
 const axios = require("axios").default;
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 
 const path = require("path");
 
@@ -93,14 +94,32 @@ app.get("/api/articles/:id", (req, res, next) => {
   );
 });
 
+// exports.signup = (req, res, next) => {
+//   console.log("adding user");
+//     const user = new User({
+
 app.post("/api/auth/signup", (req, res, next) => {
   console.log("signing up");
-  const { email, password, firstName, lastName, articlesRead } = req.body;
-  console.log(email, password, firstName, lastName, articlesRead);
+  const {
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    lastName,
+    articlesRead,
+  } = req.body;
+  console.log(
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    lastName,
+    articlesRead
+  );
   connection.query(
     `INSERT INTO Users (firstName, lastName, email, password, articlesRead) VALUES ('${firstName}', '${lastName}', '${email}', '${password}' ,'${articlesRead}');`,
     function (err, result) {
-      console.log(chalk.magenta(result));
+      // console.log(chalk.magenta(result));
       console.log(result.insertId);
       if (err) {
         console.log(err);

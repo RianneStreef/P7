@@ -58,11 +58,11 @@ export default function displayArticles(props) {
         `http://localhost:3001/api/articles/${currentArticleId}`
       );
       console.log('getting article info');
-      console.log(res);
-      console.log(res.data.articleUpdate[0].usersLiked);
       usersLiked = res.data.articleUpdate[0].usersLiked;
       console.log(typeof res.data.articleUpdate[0].usersLiked);
-      usersDisliked = res.data.articleUpdate.usersDisliked;
+      usersDisliked = res.data.articleUpdate[0].usersDisliked;
+      console.log(usersLiked);
+      console.log(typeof userLiked);
       if (usersLiked === null) {
         usersLiked = [];
       }
@@ -81,10 +81,44 @@ export default function displayArticles(props) {
     currentArticle.id = article.id;
     await updateCurrentArticle(currentArticle.id);
 
-    if (!currentArticle.usersLiked.includes(currentUser.id)) {
+    if (
+      !currentArticle.usersLiked.includes(currentUser.id) &&
+      !currentArticle.usersDisliked.includes(currentUser.id)
+    ) {
       currentArticle.usersLiked.push(currentUser.id);
       console.log(currentArticle.usersLiked);
     }
+
+    // if it is in the array, then take it out.
+    else if (currentArticle.usersLiked.includes(currentUser.id)) {
+      console.log('taking out like');
+
+      // eslint-disable-next-line no-plusplus
+      // for (let i = 0; i < usersLiked.length; i++) {
+      //   if (usersLiked[i] === currentUser.id) {
+      //     usersLiked.splice(1, i);
+      //   }
+      // }
+      // console.log(usersLiked);
+      // take it out -> filter array  - values that are not currentUser.id
+    }
+
+    // const currentUserId = currentUser.id
+
+    // const newUsersLiked = usersLiked.filter((currentUserId) => {
+    //   // eslint-disable-next-line no-plusplus
+    //   for (let i = 0; usersLiked.length < 1; i++) {
+    //     if (usersLiked[i] === currentUserId) {
+    //       return false;
+    //     }
+    //   }
+    //   return newUsersLiked;
+    // });
+
+    // console.log(newUsersLiked);
+
+    // usersLiked = newUsersLiked;
+
     try {
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
       console.log('updating article');
@@ -97,9 +131,13 @@ export default function displayArticles(props) {
 
   const handleDislike = async (article) => {
     currentArticle.id = article.id;
-    if (!usersDisliked.includes(currentUser.id)) {
+    if (
+      !currentArticle.usersLiked.includes(currentUser.id) &&
+      !currentArticle.usersDisliked.includes(currentUser.id)
+    ) {
       currentArticle.usersDisliked.push(currentUser.id);
     }
+
     try {
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
       console.log('updating article');

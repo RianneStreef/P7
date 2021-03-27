@@ -16,21 +16,33 @@ function EditProfile(props) {
   const [changePassword, setChangePassword] = useState('');
 
   const [userDetails, setUserDetails] = useState({
-    email: currentUser.email,
     firstName: currentUser.firstName,
     lastName: currentUser.lastName,
     id: currentUser.id,
+    password: '',
+    confirmPassword: '',
     // picture: '',
   });
 
-  const { email, firstName, lastName, id } = currentUser;
+  const { firstName, lastName, id, password, confirmPassword } = userDetails;
 
   function closeEditProfile() {
     changeProfileDetails(!editProfile);
   }
 
+  function closeEditPassword() {
+    setChangePassword(!changePassword);
+  }
+
   function openChangePassword() {
     setChangePassword(!changePassword);
+  }
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  function displayPassword() {
+    setShowPassword(!showPassword);
   }
 
   const deleteProfile = async () => {
@@ -46,13 +58,22 @@ function EditProfile(props) {
   };
 
   const handleInput = (event) => {
-    setCurrentUser((prevState) => {
+    setUserDetails((prevState) => {
       const newCurrentUserDetails = {
         ...prevState,
         [event.target.name]: event.target.value,
       };
       return newCurrentUserDetails;
     });
+
+    if (userDetails.password === userDetails.confirmPassword) {
+      console.log('passwords matching');
+      setButtonDisabled(false);
+    }
+    if (userDetails.password !== userDetails.confirmPassword) {
+      console.log('passwords not matching');
+      setButtonDisabled(true);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -65,9 +86,13 @@ function EditProfile(props) {
       await axios.put(`http://localhost:3001/api/auth/`, currentUser);
       openProfile(false);
     } catch (err) {
+      setButtonDisabled(true);
+
       console.error('Error submitting');
     }
   };
+
+  console.log(confirmPassword);
 
   return (
     <>
@@ -122,37 +147,98 @@ function EditProfile(props) {
               onChange={handleInput}
             />
           </label>
-        </div> */}
-          <div>
-            <div className="button-container">
-              <button
-                className="link-button"
-                type="button"
-                onClick={openChangePassword}
-              >
-                I would like to change my password
-              </button>
-            </div>
+          </div> */}
 
-            {changePassword && (
-              <div className="form-group">
-                <label htmlFor="password">
-                  <input
-                    placeholder="new password"
-                    type="text"
-                    id="password"
-                    name="password"
-                    // value={password}
-                    onChange={handleInput}
-                  />
-                </label>
+          <div>
+            {!changePassword ? (
+              <>
+                <div className="button-container">
+                  <button
+                    className="link-button"
+                    type="button"
+                    onClick={openChangePassword}
+                  >
+                    I would like to change my password
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="close-button-container">
+                <button
+                  className="close-button"
+                  type="button"
+                  onClick={closeEditPassword}
+                >
+                  X
+                </button>
               </div>
+            )}
+            {changePassword && (
+              <>
+                <div className="password-button">
+                  <div className="form-group">
+                    <label htmlFor="password">
+                      <input
+                        placeholder="new password"
+                        type="text"
+                        id="password"
+                        name="password"
+                        className={`${
+                          !showPassword ? 'password' : 'password-input'
+                        }`}
+                        value={password}
+                        autoComplete="off"
+                        onChange={handleInput}
+                      />
+                    </label>
+                  </div>
+                  <button
+                    className="eye-button"
+                    type="button"
+                    onClick={displayPassword}
+                  >
+                    {!showPassword ? (
+                      <i className="fas fa-eye" />
+                    ) : (
+                      <i className="fas fa-eye-slash" />
+                    )}
+                  </button>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">
+                    <input
+                      placeholder="confirm new password"
+                      type="text"
+                      className={`${!showPassword ? 'confirmPassword' : ''}${
+                        buttonDisabled && confirmPassword.length > 3
+                          ? ' input-error'
+                          : ''
+                      }`}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      autoComplete="off"
+                      value={confirmPassword}
+                      onChange={handleInput}
+                    />
+                  </label>
+                </div>
+              </>
             )}
           </div>
           <div className="button-container">
-            <button className="text-button" type="submit">
-              Save
-            </button>
+            {!changePassword ? (
+              <button className="text-button" type="submit">
+                Save
+              </button>
+            ) : (
+              <button
+                className="text-button"
+                type="submit"
+                disabled={buttonDisabled === true}
+              >
+                Save password
+              </button>
+            )}
             <button
               className="text-button"
               type="button"

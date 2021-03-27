@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SignUp.css';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
@@ -11,13 +11,27 @@ function signUp(props) {
 
   const [signUpDetails, setSignUpDetails] = useState({
     email: 'riannestreef@gmail.com',
-    password: 'hallo',
+    password: '',
+    confirmPassword: '',
     firstName: 'Rianne',
     lastName: 'Streef',
     articlesRead: [],
   });
 
-  const { email, password, firstName, lastName } = signUpDetails;
+  const {
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    lastName,
+  } = signUpDetails;
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  function displayPassword() {
+    setShowPassword(!showPassword);
+  }
 
   const handleInput = (event) => {
     setSignUpDetails((prevState) => {
@@ -27,9 +41,23 @@ function signUp(props) {
       };
       return inputDetails;
     });
+    console.log(signUpDetails.password);
+    console.log(signUpDetails.confirmPassword);
+    console.log(buttonDisabled);
+    if (signUpDetails.password === signUpDetails.confirmPassword) {
+      console.log('passwords matching');
+      setButtonDisabled(false);
+    }
+    if (signUpDetails.password !== signUpDetails.confirmPassword) {
+      console.log('passwords not matching');
+      setButtonDisabled(true);
+    }
   };
 
+  // input is always one step behind
+
   const handleSubmit = async (event) => {
+    console.log('sending signup details');
     setError('');
     setIsLoading(true);
 
@@ -48,6 +76,7 @@ function signUp(props) {
       setCurrentUser(res.data.user);
       console.log(currentUser);
     } catch (err) {
+      setButtonDisabled(true);
       if (err?.response && err?.response?.data?.message) {
         console.log(err?.response?.data?.message);
         setError(err.response.data.message);
@@ -78,18 +107,54 @@ function signUp(props) {
                 />
               </label>
             </div>
+            <div className="password-button">
+              <div className="form-group">
+                <label htmlFor="password">
+                  <input
+                    placeholder="password"
+                    type="text"
+                    id="password"
+                    name="password"
+                    autoComplete="off"
+                    className={`${
+                      !showPassword ? 'password' : 'password-input'
+                    }`}
+                    value={password}
+                    onChange={handleInput}
+                  />
+                </label>
+              </div>
+              <button
+                className="eye-button"
+                type="button"
+                onClick={displayPassword}
+              >
+                {!showPassword ? (
+                  <i className="fas fa-eye" />
+                ) : (
+                  <i className="fas fa-eye-slash" />
+                )}
+              </button>
+            </div>
             <div className="form-group">
-              <label htmlFor="password">
+              <label htmlFor="confirmPassword">
                 <input
-                  placeholder="password"
+                  placeholder="confirm password"
                   type="text"
-                  id="password"
-                  name="password"
-                  value={password}
+                  className={`${!showPassword ? 'confirmPassword' : ''}${
+                    buttonDisabled && confirmPassword.length > 0
+                      ? ' input-error'
+                      : ''
+                  }`}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  autoComplete="off"
+                  value={confirmPassword}
                   onChange={handleInput}
                 />
               </label>
             </div>
+
             <div className="form-group">
               <label htmlFor="firstName">
                 <input
@@ -103,7 +168,7 @@ function signUp(props) {
               </label>
             </div>
             <div className="form-group">
-              <label htmlFor="last">
+              <label htmlFor="lastName">
                 <input
                   placeholder="last name"
                   type="text"
@@ -116,7 +181,11 @@ function signUp(props) {
             </div>
 
             <div className="button-container">
-              <button className="text-button" type="submit">
+              <button
+                className="text-button"
+                type="submit"
+                disabled={buttonDisabled === true}
+              >
                 Sign up
               </button>
             </div>

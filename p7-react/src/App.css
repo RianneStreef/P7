@@ -46,6 +46,7 @@ input {
   border: none;
   border-bottom: solid 1px var(--color-secondary);
   font-family: 'Fira Sans', sans-serif;
+  width: 100%;
 }
 
 .card {
@@ -108,6 +109,13 @@ button {
   color: #000000;
 }
 
+.close-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
 .icon-button {
   display: flex;
   justify-content: center;
@@ -130,10 +138,47 @@ button {
   justify-content: flex-end;
 }
 
-#password {
+button:disabled {
+  background-color: var(--color-tertiary);
+  color: #000000;
+}
+
+button:disabled:hover {
+  background-color: var(--color-tertiary);
+  color: #000000;
+}
+.eye-button {
+  height: inherit;
+}
+
+.eye-button i {
+  margin: 0;
+}
+
+.confirmPassword {
   -webkit-text-security: disc;
+  border-bottom: solid 1px var(--color-secondary);
+}
+.password {
+  -webkit-text-security: disc;
+  border-bottom: none;
+}
+
+.password-input {
+  border-bottom: none;
+}
+
+.password-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--color-secondary);
 }
 
 .err {
   color: red;
+}
+
+.input-error {
+  border: 2px solid red;
 }
