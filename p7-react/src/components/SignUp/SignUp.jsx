@@ -28,6 +28,17 @@ function signUp(props) {
 
   const [showPassword, setShowPassword] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [passwordsEqual, setPasswordsToEqual] = useState(false);
+
+  const inputButtonHandler = () => {
+    console.log('checking password and length');
+    console.log(password.length);
+    console.log(passwordsEqual);
+
+    if (password.length > 3 && passwordsEqual === true) {
+      setButtonDisabled(false);
+    }
+  };
 
   function displayPassword() {
     setShowPassword(!showPassword);
@@ -41,7 +52,7 @@ function signUp(props) {
       };
       return inputDetails;
     });
-    console.log(signUpDetails.password);
+    /* console.log(signUpDetails.password);
     console.log(signUpDetails.confirmPassword);
     console.log(buttonDisabled);
     if (signUpDetails.password === signUpDetails.confirmPassword) {
@@ -51,10 +62,26 @@ function signUp(props) {
     if (signUpDetails.password !== signUpDetails.confirmPassword) {
       console.log('passwords not matching');
       setButtonDisabled(true);
-    }
+    } */
   };
 
-  // input is always one step behind
+  useEffect(() => {
+    console.log('Signup details updated');
+    inputButtonHandler();
+    if (signUpDetails.password === signUpDetails.confirmPassword) {
+      console.log('passwords matching');
+      console.log(signUpDetails.password);
+      console.log(signUpDetails.confirmPassword);
+      setPasswordsToEqual(true);
+      console.log(passwordsEqual);
+    } else {
+      console.log('passwords not matching');
+      console.log(signUpDetails.password);
+      console.log(signUpDetails.confirmPassword);
+      setPasswordsToEqual(false);
+      console.log(passwordsEqual);
+    }
+  }, [signUpDetails]);
 
   const handleSubmit = async (event) => {
     console.log('sending signup details');
@@ -142,7 +169,7 @@ function signUp(props) {
                   placeholder="confirm password"
                   type="text"
                   className={`${!showPassword ? 'confirmPassword' : ''}${
-                    buttonDisabled && confirmPassword.length > 0
+                    buttonDisabled && confirmPassword.length < 1
                       ? ' input-error'
                       : ''
                   }`}

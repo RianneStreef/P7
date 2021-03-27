@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './EditProfile.css';
 import axios from 'axios';
 
@@ -65,7 +65,9 @@ function EditProfile(props) {
       };
       return newCurrentUserDetails;
     });
+  };
 
+  useEffect(() => {
     if (userDetails.password === userDetails.confirmPassword) {
       console.log('passwords matching');
       setButtonDisabled(false);
@@ -74,7 +76,7 @@ function EditProfile(props) {
       console.log('passwords not matching');
       setButtonDisabled(true);
     }
-  };
+  }, [userDetails]);
 
   const handleSubmit = async (event) => {
     console.log('sending new profile');
