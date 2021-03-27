@@ -11,7 +11,7 @@ function AddArticle(props) {
     title: 'New Article',
     description: 'My article',
     url: 'www.google.com',
-    usersLiked: [1, 2, 3],
+    usersLiked: [],
     usersDisliked: [],
   });
 

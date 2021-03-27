@@ -9,7 +9,7 @@
 
 body {
   margin-top: 100px;
-  height: 100vh;
+  height: calc(100vh-100px);
   width: 100vw;
   background-color: var(--color-secondary);
   background-image: url('../src/img/background.jpg');

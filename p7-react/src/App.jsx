@@ -41,7 +41,6 @@ function App() {
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
     }
-
     fetchData();
   }, []); // dependencies
 
