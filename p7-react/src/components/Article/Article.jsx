@@ -92,6 +92,10 @@ export default function displayArticles(props) {
     // if it is in the array, then take it out.
     else if (currentArticle.usersLiked.includes(currentUser.id)) {
       console.log('taking out like');
+      const newArray = currentArticle.usersLiked.filter(
+        (userThatLiked) => userThatLiked.id !== currentUser.id
+      );
+      console.log(newArray);
 
       // eslint-disable-next-line no-plusplus
       // for (let i = 0; i < usersLiked.length; i++) {

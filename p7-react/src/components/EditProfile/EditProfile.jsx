@@ -12,6 +12,8 @@ function EditProfile(props) {
     logOut,
   } = props;
 
+  console.log(currentUser);
+
   const [isError, setError] = useState('');
   const [changePassword, setChangePassword] = useState('');
 

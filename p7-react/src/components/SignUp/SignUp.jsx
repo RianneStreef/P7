@@ -41,7 +41,7 @@ function signUp(props) {
       };
       return inputDetails;
     });
-    console.log(signUpDetails.password);
+    /* console.log(signUpDetails.password);
     console.log(signUpDetails.confirmPassword);
     console.log(buttonDisabled);
     if (signUpDetails.password === signUpDetails.confirmPassword) {
@@ -51,8 +51,20 @@ function signUp(props) {
     if (signUpDetails.password !== signUpDetails.confirmPassword) {
       console.log('passwords not matching');
       setButtonDisabled(true);
-    }
+    } */
   };
+
+  useEffect(() => {
+    console.log('Signup details updated');
+    if (signUpDetails.password === signUpDetails.confirmPassword) {
+      console.log('passwords matching');
+      setButtonDisabled(false);
+    }
+    if (signUpDetails.password !== signUpDetails.confirmPassword) {
+      console.log('passwords not matching');
+      setButtonDisabled(true);
+    }
+  }, [signUpDetails]);
 
   // input is always one step behind
 
