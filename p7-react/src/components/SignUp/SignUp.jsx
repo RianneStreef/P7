@@ -35,7 +35,7 @@ function signUp(props) {
     console.log(password.length);
     console.log(passwordsEqual);
 
-    if (password.length > 3 && passwordsEqual === true) {
+    if (password.length > 0 && passwordsEqual === true) {
       setButtonDisabled(false);
     }
   };
@@ -169,9 +169,7 @@ function signUp(props) {
                   placeholder="confirm password"
                   type="text"
                   className={`${!showPassword ? 'confirmPassword' : ''}${
-                    buttonDisabled && confirmPassword.length < 1
-                      ? ' input-error'
-                      : ''
+                    buttonDisabled ? ' input-error' : ''
                   }`}
                   id="confirmPassword"
                   name="confirmPassword"
