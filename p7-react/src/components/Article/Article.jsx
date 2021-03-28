@@ -17,12 +17,14 @@ export default function displayArticles(props) {
 
   let { usersLiked, usersDisliked } = currentArticle;
 
-  if (usersLiked === null) {
-    usersLiked = [];
+  if (currentArticle.usersLiked === null) {
+    currentArticle.usersLiked = [];
   }
   if (usersDisliked === null) {
     usersDisliked = [];
   }
+  console.log(currentArticle.usersLiked);
+  console.log(usersDisliked);
 
   function fetchData() {
     console.log('fetching data');
@@ -51,42 +53,45 @@ export default function displayArticles(props) {
       currentArticle.usersDisliked = JSON.parse(
         res.data.articleUpdate[0].usersDisliked
       );
-      if (currentArticle.usersLiked === null) {
-        usersLiked = [];
-      }
-      if (currentArticle.usersDisliked === null) {
-        usersDisliked = [];
-      }
-      console.log(typeof currentArticle.usersLiked);
+      console.log(usersLiked);
+      console.log(usersDisliked);
+      // if (currentArticle.usersLiked === null) {
+      //   currentArticle.usersLiked = [];
+      // }
+      // if (currentArticle.usersDisliked === null) {
+      //   currentArticle.usersDisliked = [];
+      // }
     } catch (err) {
       console.log('cant get current article info');
     }
   }
 
   const handleLike = async (article) => {
+    console.log('liking');
     currentArticle.id = article.id;
     await updateCurrentArticle(currentArticle.id);
-    console.log(currentArticle.id);
-    console.log(usersLiked);
-    console.log(typeof usersLiked);
-
     if (
       !usersLiked.includes(currentUser.id) &&
-      !currentArticle.usersDisliked.includes(currentUser.id)
+      !usersDisliked.includes(currentUser.id)
     ) {
-      currentArticle.usersLiked.push(currentUser.id);
-      console.log(currentArticle.usersLiked);
-    } else if (currentArticle.usersLiked.includes(currentUser.id)) {
+      console.log('adding like');
+      console.log(usersLiked);
+      usersLiked.push(currentUser.id);
+      console.log(usersLiked);
+      // till here all is good -
+    } else if (usersLiked.includes(currentUser.id)) {
       console.log('taking out like');
       console.log(currentUser.id);
-      const newArray = currentArticle.usersLiked.filter(
+      const newArray = usersLiked.filter(
         (userThatLiked) => userThatLiked !== currentUser.id
       );
       console.log(newArray);
-
-      currentArticle.usersLiked = newArray;
+      usersLiked = newArray;
+      console.log(usersLiked);
     }
     try {
+      console.log(usersLiked);
+      console.log(currentArticle);
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
       console.log('updating article');
       fetchData();
@@ -97,23 +102,25 @@ export default function displayArticles(props) {
   };
 
   const handleDislike = async (article) => {
+    console.log('disliking');
+
     currentArticle.id = article.id;
     await updateCurrentArticle(currentArticle.id);
     if (
-      !currentArticle.usersLiked.includes(currentUser.id) &&
-      !currentArticle.usersDisliked.includes(currentUser.id)
+      !usersLiked.includes(currentUser.id) &&
+      !usersDisliked.includes(currentUser.id)
     ) {
-      currentArticle.usersDisliked.push(currentUser.id);
-      console.log(currentArticle.usersDisliked);
-    } else if (currentArticle.usersDisliked.includes(currentUser.id)) {
+      console.log('adding dislike');
+      usersDisliked.push(currentUser.id);
+      console.log(usersDisliked);
+    } else if (usersLiked.includes(currentUser.id)) {
       console.log('taking out dislike');
-      console.log(currentUser.id);
-      const newArray = currentArticle.usersDisliked.filter(
-        (userThatDisliked) => userThatDisliked !== currentUser.id
+      const newArray = usersLiked.filter(
+        (userThatLiked) => userThatLiked.id !== currentUser.id
       );
       console.log(newArray);
 
-      currentArticle.usersDisliked = newArray;
+      usersDisliked = newArray;
     }
     try {
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
@@ -127,12 +134,16 @@ export default function displayArticles(props) {
 
   async function setArticleToRead(articleId) {
     console.log('set article to read');
+    console.log(articleId);
+    console.log(articlesRead);
 
     if (articlesRead === null) {
       articlesRead = [];
     }
     if (!articlesRead.includes(articleId)) {
       articlesRead.push(articleId);
+      console.log('articlesRead');
+      console.log(articlesRead);
 
       try {
         await axios.put('http://localhost:3001/api/auth/', currentUser);

@@ -24,21 +24,11 @@ function signUp(props) {
     confirmPassword,
     firstName,
     lastName,
+    articlesRead,
   } = signUpDetails;
 
   const [showPassword, setShowPassword] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [passwordsEqual, setPasswordsToEqual] = useState(false);
-
-  const inputButtonHandler = () => {
-    console.log('checking password and length');
-    console.log(password.length);
-    console.log(passwordsEqual);
-
-    if (password.length > 0 && passwordsEqual === true) {
-      setButtonDisabled(false);
-    }
-  };
 
   function displayPassword() {
     setShowPassword(!showPassword);
@@ -52,9 +42,10 @@ function signUp(props) {
       };
       return inputDetails;
     });
-    /* console.log(signUpDetails.password);
-    console.log(signUpDetails.confirmPassword);
-    console.log(buttonDisabled);
+  };
+
+  useEffect(() => {
+    console.log('Signup details updated');
     if (signUpDetails.password === signUpDetails.confirmPassword) {
       console.log('passwords matching');
       setButtonDisabled(false);
@@ -62,34 +53,17 @@ function signUp(props) {
     if (signUpDetails.password !== signUpDetails.confirmPassword) {
       console.log('passwords not matching');
       setButtonDisabled(true);
-    } */
-  };
-
-  useEffect(() => {
-    console.log('Signup details updated');
-    inputButtonHandler();
-    if (signUpDetails.password === signUpDetails.confirmPassword) {
-      console.log('passwords matching');
-      console.log(signUpDetails.password);
-      console.log(signUpDetails.confirmPassword);
-      setPasswordsToEqual(true);
-      console.log(passwordsEqual);
-    } else {
-      console.log('passwords not matching');
-      console.log(signUpDetails.password);
-      console.log(signUpDetails.confirmPassword);
-      setPasswordsToEqual(false);
-      console.log(passwordsEqual);
     }
   }, [signUpDetails]);
 
   const handleSubmit = async (event) => {
-    console.log('sending signup details');
+    console.log('sending sign up details');
     setError('');
     setIsLoading(true);
 
     event.preventDefault();
     try {
+      console.log(currentUser);
       const res = await axios.post(
         'http://localhost:3001/api/auth/signup',
         signUpDetails
@@ -100,7 +74,14 @@ function signUp(props) {
       console.log(res);
 
       console.log(res.data.user);
-      setCurrentUser(res.data.user);
+
+      // info is here, but not setting current use
+      // setCurrentUser(res.data.user);
+      currentUser.email = res.data.user.email;
+      currentUser.id = res.data.user.id;
+      currentUser.firstName = res.data.user.firstName;
+      currentUser.lastName = res.data.user.lastName;
+      currentUser.articlesRead = JSON.parse(res.data.user.articlesRead);
       console.log(currentUser);
     } catch (err) {
       setButtonDisabled(true);

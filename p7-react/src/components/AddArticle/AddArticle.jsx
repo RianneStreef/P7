@@ -15,7 +15,8 @@ function AddArticle(props) {
     usersDisliked: [],
   });
 
-  const { title, description, url, usersLiked, usersDisliked } = articleDetails;
+  const { title, description, url } = articleDetails;
+  let { usersLiked, usersDisliked } = articleDetails;
 
   function closeAddArticle() {
     setAddArticle(!addArticle);
@@ -44,6 +45,17 @@ function AddArticle(props) {
 
     event.preventDefault();
     try {
+      console.log(articleDetails);
+      if (usersLiked === null) {
+        usersLiked = [];
+      }
+      if (usersDisliked === null) {
+        usersDisliked = [];
+      }
+      // articleDetails.usersLiked = JSON.stringify(articleDetails.usersLiked);
+      // articleDetails.usersDisliked = JSON.stringify(
+      //   articleDetails.usersDisliked
+      // );
       console.log(articleDetails);
       await axios.post('http://localhost:3001/api/articles/', articleDetails);
       fetchData();

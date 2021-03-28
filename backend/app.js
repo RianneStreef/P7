@@ -77,7 +77,6 @@ app.get("/api/articles/", (req, res, next) => {
 
 app.get("/api/articles/:id", (req, res, next) => {
   console.log("searching for article");
-  console.log(res);
   const id = req.params.id;
   connection.query(
     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
@@ -94,28 +93,12 @@ app.get("/api/articles/:id", (req, res, next) => {
   );
 });
 
-// exports.signup = (req, res, next) => {
-//   console.log("adding user");
-//     const user = new User({
-
 app.post("/api/auth/signup", async (req, res, next) => {
   console.log("signing up");
-  const {
-    email,
-    password,
-    confirmPassword,
-    firstName,
-    lastName,
-    articlesRead,
-  } = req.body;
-  console.log(
-    email,
-    password,
-    confirmPassword,
-    firstName,
-    lastName,
-    articlesRead
-  );
+  const { email, password, firstName, lastName } = req.body;
+  let { articlesRead } = req.body;
+  articlesRead = JSON.stringify(articlesRead);
+  console.log(email, password, firstName, lastName, articlesRead);
 
   // Check if all fields are submitted
   // Validate each of the fields
@@ -133,9 +116,9 @@ app.post("/api/auth/signup", async (req, res, next) => {
   try {
     connection.query(
       `INSERT INTO Users (firstName, lastName, email, password, articlesRead)
-      VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}' ,'${articlesRead}');`,
+        VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}' ,'${articlesRead}');`,
       function (err, result) {
-        // console.log(chalk.magenta(result));
+        console.log(chalk.magenta(result));
         console.log(result.insertId);
         if (err) {
           console.log(err);
@@ -154,22 +137,23 @@ app.post("/api/auth/signup", async (req, res, next) => {
             });
           }
           /* return res.status(500).json({
-            message: 'Unknown error',
-          }); */
-          insertId = result.insertId;
+              message: 'Unknown error',
+            }); */
         }
         insertId = result.insertId;
+        console.log(chalk.blue(insertId));
+
+        return res.status(200).json({
+          user: {
+            email,
+            firstName,
+            lastName,
+            articlesRead,
+            id: insertId,
+          },
+        });
       }
     );
-    return res.status(200).json({
-      user: {
-        email,
-        firstName,
-        lastName,
-        articlesRead,
-        id: insertId,
-      },
-    });
   } catch (err) {
     console.log("MAJOR ERROR");
     console.log(err);
@@ -197,7 +181,9 @@ app.delete("/api/auth/:id", (req, res, next) => {
 
 app.put("/api/auth/", (req, res, next) => {
   console.log("updating profile");
-  const { id, email, firstName, lastName, articlesRead } = req.body;
+  const { id, email, firstName, lastName } = req.body;
+  let { articlesRead } = req.body;
+  articlesRead = JSON.stringify(articlesRead);
   console.log(req.body);
   console.log({ id, email, firstName, lastName, articlesRead });
   connection.query(
@@ -219,7 +205,10 @@ app.put("/api/auth/", (req, res, next) => {
 
 app.put("/api/articles/", (req, res, next) => {
   console.log("updating article");
-  const { id, usersLiked, usersDisliked } = req.body;
+  const { id } = req.body;
+  let { usersLiked, usersDisliked } = req.body;
+  usersLiked = JSON.stringify(usersLiked);
+  usersDisliked = JSON.stringify(usersDisliked);
   console.log(id, usersLiked, usersDisliked);
   connection.query(
     `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`,
@@ -235,32 +224,6 @@ app.put("/api/articles/", (req, res, next) => {
     }
   );
 });
-
-// app.get("/api/auth/", (req, res, next) => {
-//   console.log(chalk.magenta("looking for user"));
-//   // console.log(req.body);
-//   // const { currentUser } = req.body;
-//   const currentUser = "riannestreef@gmail.com";
-//   console.log(currentUser);
-//   // define email to find
-//   con.query(
-//     // 'GET * FROM Users'
-
-//     `SELECT * FROM Users WHERE email='${currentUser}';`,
-//     // make email dynamic
-
-//     // like signup call
-//     function (err, result) {
-//       if (err) {
-//         console.log(err);
-//       }
-//       return res.status(200).json({
-//         // return all info on entry with defined email ??
-//         user: "result",
-//       });
-//     }
-//   );
-// });
 
 app.post("/api/articles", (req, res, next) => {
   console.log("start");
