@@ -205,7 +205,9 @@ export default function displayArticles(props) {
                   }`}
                 />
               </button>
-              <span>{article.usersLiked ? article.usersLiked.length : 0}</span>
+              <span>
+                {article.usersLiked ? JSON.parse(article.usersLiked).length : 0}
+              </span>
 
               <button onClick={() => handleDislike(article)} type="button">
                 <i
@@ -218,7 +220,9 @@ export default function displayArticles(props) {
                 />
               </button>
               <span>
-                {article.usersDisliked ? article.usersDisliked.length : 0}
+                {article.usersDisliked
+                  ? JSON.parse(article.usersDisliked).length
+                  : 0}
               </span>
             </div>
           </div>
