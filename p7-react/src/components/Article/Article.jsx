@@ -15,16 +15,7 @@ export default function displayArticles(props) {
     usersDisliked: [],
   });
 
-  let { usersLiked, usersDisliked } = currentArticle;
-
-  // if (usersLiked === null) {
-  //   usersLiked = [];
-  // }
-  // if (usersDisliked === null) {
-  //   usersDisliked = [];
-  // }
-  console.log(usersLiked);
-  console.log(usersDisliked);
+  const { usersLiked, usersDisliked } = currentArticle;
 
   function fetchData() {
     console.log('fetching data');
@@ -47,18 +38,22 @@ export default function displayArticles(props) {
       );
       console.log('getting article info');
       console.log(res);
-      usersLiked = JSON.parse(res.data.articleUpdate[0].usersLiked);
-      usersDisliked = JSON.parse(res.data.articleUpdate[0].usersDisliked);
-      console.log(usersLiked);
-      console.log(usersDisliked);
-      if (usersLiked === null) {
-        usersLiked = [];
-      }
-      if (usersDisliked === null) {
-        usersDisliked = [];
-      }
-      console.log(usersLiked);
-      console.log(usersDisliked);
+      currentArticle.usersLiked = JSON.parse(
+        res.data.articleUpdate[0].usersLiked
+      );
+      currentArticle.usersDisliked = JSON.parse(
+        res.data.articleUpdate[0].usersDisliked
+      );
+      console.log(currentArticle.usersLiked);
+      console.log(currentArticle.usersDisliked);
+      // if (usersLiked === null) {
+      //   usersLiked = [];
+      // }
+      // if (usersDisliked === null) {
+      //   usersDisliked = [];
+      // }
+      // console.log(currentArticle.usersLiked);
+      // console.log(currentArticle.usersDisliked);
     } catch (err) {
       console.log(err);
       console.log('cant get current article info');
@@ -77,25 +72,25 @@ export default function displayArticles(props) {
       !currentArticle.usersDisliked.includes(currentUser.id)
     ) {
       console.log('adding like');
-      console.log(usersLiked);
-      usersLiked.push(currentUser.id);
-      console.log(usersLiked);
-      currentArticle.usersLiked = usersLiked;
+      console.log(currentArticle.usersLiked);
+      currentArticle.usersLiked.push(currentUser.id);
+      console.log(currentArticle.usersLiked);
+      // currentArticle.usersLiked = usersLiked;
       // till here all is good -
-    } else if (usersLiked.includes(currentUser.id)) {
+    } else if (currentArticle.usersLiked.includes(currentUser.id)) {
       console.log(usersLiked);
-      console.log(currentUser.usersLiked);
+      console.log(currentArticle.usersLiked);
       console.log('taking out like');
       console.log(currentUser.id);
-      const newArray = usersLiked.filter(
+      const newArray = currentArticle.usersLiked.filter(
         (userThatLiked) => userThatLiked !== currentUser.id
       );
       console.log(newArray);
-      currentUser.usersLiked = newArray;
-      console.log(currentUser.usersLiked);
+      currentArticle.usersLiked = newArray;
+      console.log(currentArticle.usersLiked);
     }
     try {
-      console.log(usersLiked);
+      console.log(currentArticle.usersLiked);
       console.log(currentArticle);
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
       console.log('updating article');
@@ -108,27 +103,36 @@ export default function displayArticles(props) {
 
   const handleDislike = async (article) => {
     console.log('disliking');
-
     currentArticle.id = article.id;
+    console.log(currentArticle.id);
     await updateCurrentArticle(currentArticle.id);
+    console.log(currentArticle);
+    console.log(usersDisliked);
     if (
       !currentArticle.usersLiked.includes(currentUser.id) &&
       !currentArticle.usersDisliked.includes(currentUser.id)
     ) {
       console.log('adding dislike');
-      usersDisliked.push(currentUser.id);
+      console.log(currentArticle.usersDisliked);
+      currentArticle.usersDisliked.push(currentUser.id);
+      console.log(currentArticle.usersDisliked);
+      // currentArticle.usersLiked = usersLiked;
+      // till here all is good -
+    } else if (currentArticle.usersDisliked.includes(currentUser.id)) {
       console.log(usersDisliked);
-      currentArticle.usersDisliked = usersLiked;
-    } else if (currentUser.usersLiked.includes(currentUser.id)) {
+      console.log(currentArticle.usersDisliked);
       console.log('taking out dislike');
-      const newArray = usersLiked.filter(
-        (userThatLiked) => userThatLiked.id !== currentUser.id
+      console.log(currentUser.id);
+      const newArray = currentArticle.usersDisliked.filter(
+        (userThatLiked) => userThatLiked !== currentUser.id
       );
       console.log(newArray);
-
-      currentUser.usersDisliked = newArray;
+      currentArticle.usersDisliked = newArray;
+      console.log(currentArticle.usersDisliked);
     }
     try {
+      console.log(currentArticle.usersDisliked);
+      console.log(currentArticle);
       await axios.put('http://localhost:3001/api/articles/', currentArticle);
       console.log('updating article');
       fetchData();
