@@ -210,6 +210,7 @@ app.put("/api/articles/", (req, res, next) => {
   usersLiked = JSON.stringify(usersLiked);
   usersDisliked = JSON.stringify(usersDisliked);
   console.log(id, usersLiked, usersDisliked);
+  console.log(typeof usersLiked);
   connection.query(
     `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`,
     function (err, result) {
@@ -233,6 +234,8 @@ app.post("/api/articles", (req, res, next) => {
   usersLiked = JSON.stringify(usersLiked);
   usersDisliked = JSON.stringify(usersDisliked);
   console.log(usersLiked, usersDisliked);
+  console.log(chalk.magenta(typeof usersLiked));
+
   connection.query(
     `INSERT INTO articles (title, description, url) VALUES ('${title}', '${description}', '${url}');`,
     function (err, result) {
