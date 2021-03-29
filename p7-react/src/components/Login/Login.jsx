@@ -26,11 +26,17 @@ function Login() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     console.log('sending login details');
+    console.log(userDetails);
     event.preventDefault();
     try {
-      axios.post('http://localhost:3001/api/auth/login', userDetails);
+      console.log(userDetails.email);
+      const res = await axios.get(
+        `http://localhost:3001/api/auth/${userDetails.email}`,
+        userDetails
+      );
+      console.log(res);
     } catch (err) {
       console.error('Error logging in');
     }

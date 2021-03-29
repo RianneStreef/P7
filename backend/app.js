@@ -6,6 +6,7 @@ const chalk = require("chalk");
 const axios = require("axios").default;
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
 
 const path = require("path");
 
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(bodyParser.json());
 
 // app.use("/images", express.static(path.join(__dirname, "images")));
 
@@ -78,6 +80,7 @@ app.get("/api/articles/", (req, res, next) => {
 app.get("/api/articles/:id", (req, res, next) => {
   console.log("searching for article");
   const id = req.params.id;
+  console.log(chalk.magenta(id));
   connection.query(
     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
     function (err, result) {
@@ -88,6 +91,29 @@ app.get("/api/articles/:id", (req, res, next) => {
       }
       return res.status(200).json({
         articleUpdate: result,
+      });
+    }
+  );
+});
+
+app.get("/api/auth/:email", (req, res, next) => {
+  console.log("finding user");
+  const { email } = req.params.email;
+  const { password } = req.body;
+  console.log(email);
+  console.log(chalk.greenBright(req.body.password));
+  console.log(chalk.magenta(email));
+  connection.query(
+    `SELECT password FROM Users WHERE email='${email}';`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to login",
+        });
+      }
+      return res.status(200).json({
+        user: result,
+        message: "Logged in",
       });
     }
   );

@@ -84,7 +84,6 @@ function signUp(props) {
       currentUser.articlesRead = JSON.parse(res.data.user.articlesRead);
       console.log(currentUser);
     } catch (err) {
-      setButtonDisabled(true);
       if (err?.response && err?.response?.data?.message) {
         console.log(err?.response?.data?.message);
         setError(err.response.data.message);
