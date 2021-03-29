@@ -46,14 +46,14 @@ export default function displayArticles(props) {
       );
       console.log(currentArticle.usersLiked);
       console.log(currentArticle.usersDisliked);
-      // if (usersLiked === null) {
-      //   usersLiked = [];
-      // }
-      // if (usersDisliked === null) {
-      //   usersDisliked = [];
-      // }
-      // console.log(currentArticle.usersLiked);
-      // console.log(currentArticle.usersDisliked);
+      if (currentArticle.usersLiked === null) {
+        currentArticle.usersLiked = [];
+      }
+      if (currentArticle.usersDisliked === null) {
+        currentArticle.usersDisliked = [];
+      }
+      console.log(currentArticle.usersLiked);
+      console.log(currentArticle.usersDisliked);
     } catch (err) {
       console.log(err);
       console.log('cant get current article info');
@@ -68,7 +68,9 @@ export default function displayArticles(props) {
     console.log(currentArticle);
     console.log(usersDisliked);
     if (
+      currentArticle.usersLiked &&
       !currentArticle.usersLiked.includes(currentUser.id) &&
+      currentArticle.usersDisliked &&
       !currentArticle.usersDisliked.includes(currentUser.id)
     ) {
       console.log('adding like');
@@ -77,7 +79,10 @@ export default function displayArticles(props) {
       console.log(currentArticle.usersLiked);
       // currentArticle.usersLiked = usersLiked;
       // till here all is good -
-    } else if (currentArticle.usersLiked.includes(currentUser.id)) {
+    } else if (
+      currentArticle.usersLiked &&
+      currentArticle.usersLiked.includes(currentUser.id)
+    ) {
       console.log(usersLiked);
       console.log(currentArticle.usersLiked);
       console.log('taking out like');
@@ -109,7 +114,9 @@ export default function displayArticles(props) {
     console.log(currentArticle);
     console.log(usersDisliked);
     if (
+      currentArticle.usersLiked &&
       !currentArticle.usersLiked.includes(currentUser.id) &&
+      currentArticle.usersDisliked &&
       !currentArticle.usersDisliked.includes(currentUser.id)
     ) {
       console.log('adding dislike');
@@ -118,7 +125,10 @@ export default function displayArticles(props) {
       console.log(currentArticle.usersDisliked);
       // currentArticle.usersLiked = usersLiked;
       // till here all is good -
-    } else if (currentArticle.usersDisliked.includes(currentUser.id)) {
+    } else if (
+      currentArticle.usersDisliked &&
+      currentArticle.usersDisliked.includes(currentUser.id)
+    ) {
       console.log(usersDisliked);
       console.log(currentArticle.usersDisliked);
       console.log('taking out dislike');

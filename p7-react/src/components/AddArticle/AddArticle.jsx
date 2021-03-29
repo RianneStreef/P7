@@ -16,7 +16,7 @@ function AddArticle(props) {
   });
 
   const { title, description, url } = articleDetails;
-  let { usersLiked, usersDisliked } = articleDetails;
+  // let { usersLiked, usersDisliked } = articleDetails;
 
   function closeAddArticle() {
     setAddArticle(!addArticle);
@@ -46,11 +46,11 @@ function AddArticle(props) {
     event.preventDefault();
     try {
       console.log(articleDetails);
-      if (usersLiked === null) {
-        usersLiked = [];
+      if (articleDetails.usersLiked === null) {
+        articleDetails.usersLiked = [];
       }
-      if (usersDisliked === null) {
-        usersDisliked = [];
+      if (articleDetails.usersDisliked === null) {
+        articleDetails.usersDisliked = [];
       }
       // articleDetails.usersLiked = JSON.stringify(articleDetails.usersLiked);
       // articleDetails.usersDisliked = JSON.stringify(
