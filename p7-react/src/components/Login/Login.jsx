@@ -32,8 +32,8 @@ function Login() {
     event.preventDefault();
     try {
       console.log(userDetails.email);
-      const res = await axios.get(
-        `http://localhost:3001/api/auth/${userDetails.email}`,
+      const res = await axios.put(
+        `http://localhost:3001/api/auth/`,
         userDetails
       );
       console.log(res);

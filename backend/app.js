@@ -96,10 +96,32 @@ app.get("/api/articles/:id", (req, res, next) => {
   );
 });
 
-app.get("/api/auth/:email", (req, res, next) => {
+// app.get("/api/auth/:email", (req, res, next) => {
+//   console.log("finding user");
+//   const { email } = req.params.email;
+//   const { password } = req.body;
+//   console.log(email);
+//   console.log(chalk.greenBright(req.body.password));
+//   console.log(chalk.magenta(email));
+//   connection.query(
+//
+//     function (err, result) {
+//       if (err) {
+//         return res.status(400).json({
+//           message: "Unable to login",
+//         });
+//       }
+//       return res.status(200).json({
+//         user: result,
+//         message: "Logged in",
+//       });
+//     }
+//   );
+// });
+
+app.post("/api/auth/", (req, res, next) => {
   console.log("finding user");
-  const { email } = req.params.email;
-  const { password } = req.body;
+  const { email, password } = req.body;
   console.log(email);
   console.log(chalk.greenBright(req.body.password));
   console.log(chalk.magenta(email));
