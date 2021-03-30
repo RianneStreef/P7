@@ -1,22 +1,24 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 
-const mysql = require("mysql");
-const chalk = require("chalk");
-const axios = require("axios").default;
-const cors = require("cors");
-const bcrypt = require("bcrypt");
-const bodyParser = require("body-parser");
+const mysql = require('mysql');
+const chalk = require('chalk');
+const axios = require('axios').default;
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 
-const connection = mysql.createConnection({
-  host: "remotemysql.com",
+const { connection } = require('../db');
+
+/* const connection = mysql.createConnection({
+  host: 'remotemysql.com',
   user: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
-  database: "OXgD76ZhvJ",
+  database: 'OXgD76ZhvJ',
 });
-
+ */
 exports.login = (req, res, next) => {
-  console.log("finding user");
+  console.log('finding user');
   const { email, password } = req.body;
   console.log(email);
   console.log(chalk.magenta(password));
@@ -25,7 +27,7 @@ exports.login = (req, res, next) => {
     async function (err, result) {
       if (err) {
         return res.status(400).json({
-          message: "Unable to login",
+          message: 'Unable to login',
         });
       }
       console.log(result);
@@ -48,19 +50,19 @@ exports.login = (req, res, next) => {
         // });
         return res.status(200).json({
           user: result,
-          message: "Logged in",
+          message: 'Logged in',
         });
       } else {
         return res.status(400).json({
-          message: "Could not log in",
+          message: 'Could not log in',
         });
       }
-    }
+    },
   );
 };
 
 exports.signup = async (req, res, next) => {
-  console.log("signing up");
+  console.log('signing up');
   const { email, password, firstName, lastName } = req.body;
   let { articlesRead } = req.body;
   articlesRead = JSON.stringify(articlesRead);
@@ -71,35 +73,37 @@ exports.signup = async (req, res, next) => {
   // You can use the Validator library
   if (!req?.body?.password) {
     return res.status(400).json({
-      message: "Incorrect input",
-      field: "",
+      message: 'Incorrect input',
+      field: '',
     });
   }
 
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   console.log(hashedPassword);
-  let insertId = "";
+  let insertId = '';
+  console.log(connection);
   try {
     connection.query(
       `INSERT INTO Users (firstName, lastName, email, password, articlesRead)
         VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}' ,'${articlesRead}');`,
       function (err, result) {
+        console.log(err);
         console.log(chalk.magenta(result));
         console.log(result.insertId);
         if (err) {
           console.log(err);
           if (err.errno && err.errno === 1062) {
             return res.status(400).json({
-              message: "Error. Duplicate email field",
-              field: "email",
+              message: 'Error. Duplicate email field',
+              field: 'email',
             });
           }
           // THIS IS FOR DEMO, TAKE OUT OR REWORK
           // The field shows which control on frontend had an error
           if (err.errno && err.errno === 9999999) {
             return res.status(400).json({
-              message: "Error. Username invalid syntax",
-              field: "username",
+              message: 'Error. Username invalid syntax',
+              field: 'username',
             });
           }
           /* return res.status(500).json({
@@ -124,10 +128,10 @@ exports.signup = async (req, res, next) => {
             id: insertId,
           },
         });
-      }
+      },
     );
   } catch (err) {
-    console.log("MAJOR ERROR");
+    console.log('MAJOR ERROR');
     console.log(err);
   }
 };
@@ -141,18 +145,18 @@ exports.deleteProfile = (req, res, next) => {
     function (err, result) {
       if (err) {
         return res.status(400).json({
-          message: "Unable to delete profile",
+          message: 'Unable to delete profile',
         });
       }
       return res.status(200).json({
-        message: "Profile deleted",
+        message: 'Profile deleted',
       });
-    }
+    },
   );
 };
 
 exports.updating = (req, res, next) => {
-  console.log("updating profile");
+  console.log('updating profile');
   const { id, email, firstName, lastName } = req.body;
   let { articlesRead } = req.body;
   articlesRead = JSON.stringify(articlesRead);
@@ -161,24 +165,24 @@ exports.updating = (req, res, next) => {
   connection.query(
     `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`,
     function (err, result) {
-      console.log("err");
+      console.log('err');
       console.log(err);
       if (err) {
         return res.status(400).json({
-          message: "Unable to update profile",
+          message: 'Unable to update profile',
         });
       }
       return res.status(200).json({
-        message: "Profile updated",
+        message: 'Profile updated',
       });
-    }
+    },
   );
 };
 
 exports.updatePassword =
-  ("/api/auth/password",
+  ('/api/auth/password',
   async (req, res, next) => {
-    console.log("updating password");
+    console.log('updating password');
     const { userId, password } = req.body;
     console.log(req.body);
     console.log(chalk.magenta(userId, password));
@@ -190,12 +194,12 @@ exports.updatePassword =
       function (error, result) {
         if (error) {
           return res.status(400).json({
-            message: "Unable to change password",
+            message: 'Unable to change password',
           });
         }
         return res.status(200).json({
-          message: "Password updated",
+          message: 'Password updated',
         });
-      }
+      },
     );
   });
