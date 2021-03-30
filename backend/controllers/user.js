@@ -1,132 +1,201 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const express = require("express");
+const app = express();
+
+const mysql = require("mysql");
+const chalk = require("chalk");
+const axios = require("axios").default;
+const cors = require("cors");
 const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
 
-exports.signup = (req, res, next) => {
-  console.log("adding user");
-  bcrypt.hash(req.body.password, 10).then((hash) => {
-    const user = new User({
-      firstName: req.body.first,
-      lastName: req.body.last,
-      email: req.body.email,
-      password: hash,
-    });
-    console.log("saving user");
-    console.log(user);
-    user
-      // this is where it stops working..
-
-      .save()
-      .then(() => {
-        res.status(201).json({
-          message: "User added successfully!",
-        });
-      })
-      .catch((error) => {
-        res.status(500).json({
-          error: new Error("User not added"),
-        });
-      });
-  });
-};
+const connection = mysql.createConnection({
+  host: "remotemysql.com",
+  user: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  database: "OXgD76ZhvJ",
+});
 
 exports.login = (req, res, next) => {
-  console.log("logging in");
-  console.log({ email: req.body.email });
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      if (!user) {
-        return res.status(401).json({
-          error: new Error("User not found!"),
+  console.log("finding user");
+  const { email, password } = req.body;
+  console.log(email);
+  console.log(chalk.magenta(password));
+  connection.query(
+    `SELECT password, id, firstName, lastName FROM Users WHERE email='${email}';`,
+    async function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to login",
         });
       }
-      bcrypt
-        .compare(req.body.password, user.password)
-        .then((valid) => {
-          if (!valid) {
-            return res.status(401).json({
-              error: new Error("Incorrect password!"),
-            });
-          }
-          const token = jwt.sign(
-            { userId: user._id },
-            "ljfbfsvdbjxzliuymnw2130lwkendv",
-            {
-              expiresIn: "24h",
-            }
-          );
-          res.status(200).json({
-            userId: user._id,
-            token: token,
-          });
-        })
-        .catch((error) => {
-          res.status(500).json({
-            error: error,
-          });
+      console.log(result);
+      console.log(result[0].password);
+      console.log(result[0].firstName);
+      const hash = result[0].password;
+      const data = password;
+      console.log(chalk.yellow(hash));
+      console.log(chalk.blue(data));
+      const comparedPassword = await bcrypt.compare(data, hash);
+      if (comparedPassword === true) {
+        console.log(comparedPassword);
+        console.log(result);
+        // const token = jwt.sign({ userId: user._id }, "ksjghdfliSGvligSBDLVb", {
+        //   expiresIn: "24h",
+        // });
+        // res.status(200).json({
+        //   userId: user._id,
+        //   token: token,
+        // });
+        return res.status(200).json({
+          user: result,
+          message: "Logged in",
         });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error: error,
-      });
-    });
-};
-
-exports.getOneUser = (req, res, next) => {
-  Sauce.findOne({
-    _id: req.params.id,
-  })
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      res.status(404).json({
-        error,
-      });
-    });
-};
-
-exports.modifyUser = (req, res, next) => {
-  console.log("modifying user");
-  const userId = req.params.id;
-
-  const host = req.protocol + "://" + req.get("host");
-
-  let newObj = {};
-
-  // Picture has changed
-  if (image) {
-    // if (req?.body?.sauce) {
-    const parsedData = JSON.parse(req.body.user);
-    const imageUrl = host + "/images/" + req.file.filename;
-    newObj = {
-      firstName: parsedData.firstName,
-      lastName: parsedData.lastName,
-      department: parsedData.department,
-      jobTitle: parsedData.jobTitle,
-      country: parsedData.country,
-      imageUrl,
-    };
-
-    // Picture hasn't changed
-  } else {
-    newObj = { ...req.body };
-  }
-
-  Sauce.findByIdAndUpdate(
-    { _id: userId },
-    { ...newObj },
-    (err, updatedUser) => {
-      if (err) {
-        console.log("ERROR");
       } else {
-        res.status(201).json({
-          message: "User successfully modified!",
+        return res.status(400).json({
+          message: "Could not log in",
         });
       }
     }
   );
 };
 
-// get('/', auth, userCtrl.getMenuOptions);
+exports.signup = async (req, res, next) => {
+  console.log("signing up");
+  const { email, password, firstName, lastName } = req.body;
+  let { articlesRead } = req.body;
+  articlesRead = JSON.stringify(articlesRead);
+  console.log(email, password, firstName, lastName, articlesRead);
+
+  // Check if all fields are submitted
+  // Validate each of the fields
+  // You can use the Validator library
+  if (!req?.body?.password) {
+    return res.status(400).json({
+      message: "Incorrect input",
+      field: "",
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  console.log(hashedPassword);
+  let insertId = "";
+  try {
+    connection.query(
+      `INSERT INTO Users (firstName, lastName, email, password, articlesRead)
+        VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}' ,'${articlesRead}');`,
+      function (err, result) {
+        console.log(chalk.magenta(result));
+        console.log(result.insertId);
+        if (err) {
+          console.log(err);
+          if (err.errno && err.errno === 1062) {
+            return res.status(400).json({
+              message: "Error. Duplicate email field",
+              field: "email",
+            });
+          }
+          // THIS IS FOR DEMO, TAKE OUT OR REWORK
+          // The field shows which control on frontend had an error
+          if (err.errno && err.errno === 9999999) {
+            return res.status(400).json({
+              message: "Error. Username invalid syntax",
+              field: "username",
+            });
+          }
+          /* return res.status(500).json({
+              message: 'Unknown error',
+            }); */
+        }
+        insertId = result.insertId;
+        console.log(chalk.blue(insertId));
+        // const token = jwt.sign({ userId: user._id }, "ksjghdfliSGvligSBDLVb", {
+        //   expiresIn: "24h",
+        // });
+        // res.status(200).json({
+        //   userId: user._id,
+        //   token: token,
+        // });
+        return res.status(200).json({
+          user: {
+            email,
+            firstName,
+            lastName,
+            articlesRead,
+            id: insertId,
+          },
+        });
+      }
+    );
+  } catch (err) {
+    console.log("MAJOR ERROR");
+    console.log(err);
+  }
+};
+
+exports.deleteProfile = (req, res, next) => {
+  console.log(req.params.id);
+  const id = req.params.id;
+
+  connection.query(
+    `DELETE FROM Users WHERE id='${id}';`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to delete profile",
+        });
+      }
+      return res.status(200).json({
+        message: "Profile deleted",
+      });
+    }
+  );
+};
+
+exports.updating = (req, res, next) => {
+  console.log("updating profile");
+  const { id, email, firstName, lastName } = req.body;
+  let { articlesRead } = req.body;
+  articlesRead = JSON.stringify(articlesRead);
+  console.log(req.body);
+  console.log({ id, email, firstName, lastName, articlesRead });
+  connection.query(
+    `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`,
+    function (err, result) {
+      console.log("err");
+      console.log(err);
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to update profile",
+        });
+      }
+      return res.status(200).json({
+        message: "Profile updated",
+      });
+    }
+  );
+};
+
+exports.updatePassword =
+  ("/api/auth/password",
+  async (req, res, next) => {
+    console.log("updating password");
+    const { userId, password } = req.body;
+    console.log(req.body);
+    console.log(chalk.magenta(userId, password));
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    console.log(hashedPassword);
+    connection.query(
+      `UPDATE Users SET password = '${hashedPassword}' WHERE id = ${userId}`,
+      function (error, result) {
+        if (error) {
+          return res.status(400).json({
+            message: "Unable to change password",
+          });
+        }
+        return res.status(200).json({
+          message: "Password updated",
+        });
+      }
+    );
+  });

@@ -1,148 +1,117 @@
-const Article = require("../models/article");
+const express = require("express");
+const app = express();
+
+const mysql = require("mysql");
 const chalk = require("chalk");
+const axios = require("axios").default;
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
 
-exports.createArticle = (req, res, next) => {
-  console.log("adding article");
-  const {
-    id,
-    title,
-    description,
-    articleUrl,
-    usersLiked,
-    usersDisliked,
-  } = JSON.parse(req.body.article);
+const connection = mysql.createConnection({
+  host: "remotemysql.com",
+  user: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  database: "OXgD76ZhvJ",
+});
 
-  usersLiked = "";
-  usersDisliked = "";
-
-  const article = new Article({
-    id,
-    title,
-    description,
-    articleUrl,
-    usersLiked,
-    usersDisliked,
-    imageUrl,
-  });
-  article
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Article saved successfully!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error,
-      });
-    });
-};
-
-exports.getAllArticles = (req, res, next) => {
-  Article.find()
-    .then((articles) => {
-      console.log("getAllArticles: Success");
-      res.status(200).json(articles);
-    })
-    .catch((error) => {
-      console.log("getAllArticles: Fail");
-      res.status(400).json({
-        error,
-      });
-    });
-};
-
-exports.deleteArticle = (req, res, next) => {
-  Sauce.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({
-        message: "Deleted!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error,
-      });
-    });
-};
-
-const removeLike = (ID, usersLiked) =>
-  usersLiked.filter((likes) => likes !== ID);
-const removeDislike = (ID, usersLiked) =>
-  usersLiked.filter((likes) => likes !== ID);
-
-exports.likeArticle = (req, res, next) => {
-  const input = req.body.like;
-  const ID = req.body.userId;
-
-  Article.findOne(
-    {
-      _id: req.params.id,
-    },
-    (err, articleFound) => {
-      if (err) {
-        // Error is found
-        console.log(chalk.red.inverse("Error"), err);
-      } else {
-        const { usersLiked, usersDisliked } = articleFound;
-        let { likes, dislikes } = articleFound;
-
-        const alreadyLiked = usersLiked.includes(ID);
-        const alreadyDisliked = usersDisliked.includes(ID);
-
-        if (input === 1) {
-          if (!alreadyLiked && !alreadyDisliked) {
-            likes += 1;
-            usersLiked.push(ID);
-            articleFound.likes = likes;
-
-            articleFound.save();
-            res.status(201).json({
-              message: "Article successfully evaluated!",
-            });
-          }
-        }
-
-        if (input === -1) {
-          if (!alreadyLiked && !alreadyDisliked) {
-            dislikes += 1;
-            usersDisliked.push(ID);
-            articleFound.dislikes = dislikes;
-            articleFound.save();
-            res.status(201).json({
-              message: "Article successfully evaluated!",
-            });
-          }
-        }
-        if (input === 0) {
-          if (alreadyLiked) {
-            likes -= 1;
-            const newUsersLiked = removeLike(ID, usersLiked);
-
-            articleFound.likes = likes;
-            articleFound.usersLiked = newUsersLiked;
-
-            articleFound.save();
-
-            res.status(201).json({
-              message: "Like deleted!",
-            });
-          }
-          if (alreadyDisliked) {
-            dislikes -= 1;
-            const newUsersDisliked = removeDislike(ID, usersDisliked);
-
-            articleFound.dislikes = dislikes;
-            articleFound.usersDisliked = newUsersDisliked;
-
-            articleFound.save();
-
-            res.status(201).json({
-              message: "Dislike deleted!",
-            });
-          }
-        }
+exports.getAll = (req, res, next) => {
+  // connection.connect() {
+  //   if (error) {
+  //     throw error;
+  //   }
+  connection.query(
+    "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
+    function (error, result) {
+      if (error) {
+        return res.status(400).json({
+          message: "Unable to fetch articles",
+        });
       }
+      return res.status(200).json({
+        articles: result,
+      });
+    }
+  );
+  // connection.end((error) => {
+  //   console.log("Closed connection");
+  //   if (error) {
+  //     throw error;
+  //   }
+  // });
+  // });
+};
+
+exports.getOne = (req, res, next) => {
+  console.log("searching for article");
+  const id = req.params.id;
+  console.log(chalk.magenta(id));
+  connection.query(
+    `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to fetch articles",
+        });
+      }
+      return res.status(200).json({
+        articleUpdate: result,
+      });
+    }
+  );
+};
+
+exports.update = (req, res, next) => {
+  console.log("updating article");
+  const { id } = req.body;
+  let { usersLiked, usersDisliked } = req.body;
+  usersLiked = JSON.stringify(usersLiked);
+  usersDisliked = JSON.stringify(usersDisliked);
+  console.log(id, usersLiked, usersDisliked);
+  console.log(typeof usersLiked);
+  connection.query(
+    `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`,
+    function (err, result) {
+      if (err) {
+        return res.status(400).json({
+          message: "Unable to update article",
+        });
+      }
+      return res.status(200).json({
+        message: "Article updated",
+      });
+    }
+  );
+};
+
+exports.likeArticles = (req, res, next) => {
+  console.log("start");
+  const { title, description, url } = req.body;
+  let { usersLiked, usersDisliked } = req.body;
+  console.log(title, description, url);
+  usersLiked = JSON.stringify(usersLiked);
+  usersDisliked = JSON.stringify(usersDisliked);
+  console.log(usersLiked, usersDisliked);
+  console.log(chalk.magenta(typeof usersLiked));
+
+  connection.query(
+    `INSERT INTO articles (title, description, url) VALUES ('${title}', '${description}', '${url}');`,
+    function (err, result) {
+      if (err) {
+        console.log(err);
+        if (err.errno && err.errno === 1062) {
+          return res.status(400).json({
+            message: "Error. Duplicate email field",
+          });
+        }
+        return res.status(500).json({
+          message: "Unknown error",
+        });
+      }
+
+      return res.status(200).json({
+        message: "success",
+      });
     }
   );
 };

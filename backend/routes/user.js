@@ -3,14 +3,11 @@ const router = express.Router();
 
 const userCtrl = require("../controllers/user");
 
-// router.post('/signup', auth, userCtrl.signup);
-// router.post('/login', auth, userCtrl.login);
-// router.get('/:id', auth, userCtrl.getOneUser);
-// router.put('/:id', auth, userCtrl.modifyUser);
+router.put("/login", userCtrl.login);
+router.post("/signup", userCtrl.signup);
+router.delete("/:id", userCtrl.deleteProfile);
 
-// router.post("/signup", userCtrl.signup);
-// router.post("/login", userCtrl.login);
-// router.get("/:id", userCtrl.getOneUser);
-// router.put("/:id", userCtrl.modifyUser);
+router.put("/user", userCtrl.updating);
+router.put("/login", userCtrl.updatePassword);
 
 module.exports = router;
