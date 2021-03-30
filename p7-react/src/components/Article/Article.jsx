@@ -166,7 +166,7 @@ export default function displayArticles(props) {
       console.log(articlesRead);
 
       try {
-        await axios.put('http://localhost:3001/api/auth/', currentUser);
+        await axios.put('http://localhost:3001/api/auth/user', currentUser);
         fetchData();
       } catch (err) {
         console.error('Could not mark as read');

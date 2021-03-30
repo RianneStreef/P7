@@ -9,6 +9,10 @@ function FormToDisplay(props) {
     isSignedUp,
     currentUser,
     setCurrentUser,
+    isError,
+    setError,
+    isLoading,
+    setIsLoading,
   } = props;
   return (
     <div className="main">
@@ -19,6 +23,10 @@ function FormToDisplay(props) {
           isSignedUp={isSignedUp}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          isError={isError}
+          setError={setError}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       ) : (
         <SignUp
@@ -26,6 +34,10 @@ function FormToDisplay(props) {
           setLoggedIn={setLoggedIn}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          isError={isError}
+          setError={setError}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
     </div>

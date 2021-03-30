@@ -4,10 +4,16 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 
 function signUp(props) {
-  const { isLoggedIn, setLoggedIn, currentUser, setCurrentUser } = props;
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setError] = useState('');
+  const {
+    isLoggedIn,
+    setLoggedIn,
+    currentUser,
+    setCurrentUser,
+    isError,
+    setError,
+    isLoading,
+    setIsLoading,
+  } = props;
 
   const [signUpDetails, setSignUpDetails] = useState({
     email: 'riannestreef@gmail.com',

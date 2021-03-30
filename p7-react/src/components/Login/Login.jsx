@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
 
-function Login() {
+function Login(props) {
+  const { currentUser, setLoggedIn, setError, setIsLoading } = props;
+
   const [userDetails, setUserDetails] = useState({
     email: 'riannestreef@gmail.com',
     password: 'Hallo',
@@ -28,15 +30,23 @@ function Login() {
 
   const handleSubmit = async (event) => {
     console.log('sending login details');
+    setError('');
+    setIsLoading(true);
     console.log(userDetails);
     event.preventDefault();
     try {
       console.log(userDetails.email);
       const res = await axios.put(
-        `http://localhost:3001/api/auth/`,
+        `http://localhost:3001/api/auth/login`,
         userDetails
       );
       console.log(res);
+      currentUser.id = res.data.user[0].id;
+      currentUser.firstName = res.data.user[0].firstName;
+      currentUser.lastName = res.data.user[0].lastName;
+      currentUser.email = userDetails.email;
+      console.log(currentUser);
+      setLoggedIn(true);
     } catch (err) {
       console.error('Error logging in');
     }

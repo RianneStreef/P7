@@ -119,24 +119,47 @@ app.get("/api/articles/:id", (req, res, next) => {
 //   );
 // });
 
-app.post("/api/auth/", (req, res, next) => {
+app.put("/api/auth/login", (req, res, next) => {
   console.log("finding user");
   const { email, password } = req.body;
   console.log(email);
-  console.log(chalk.greenBright(req.body.password));
-  console.log(chalk.magenta(email));
+  console.log(chalk.magenta(password));
   connection.query(
-    `SELECT password FROM Users WHERE email='${email}';`,
-    function (err, result) {
+    `SELECT password, id, firstName, lastName FROM Users WHERE email='${email}';`,
+    async function (err, result) {
       if (err) {
         return res.status(400).json({
           message: "Unable to login",
         });
       }
-      return res.status(200).json({
-        user: result,
-        message: "Logged in",
-      });
+      console.log(result);
+      // console.log(result.RodDataPacket.password);
+      console.log(result[0].password);
+      console.log(result[0].firstName);
+      const hash = result[0].password;
+      const data = password;
+      console.log(chalk.yellow(hash));
+      console.log(chalk.blue(data));
+      const comparedPassword = await bcrypt.compare(data, hash);
+      if (comparedPassword === true) {
+        console.log(comparedPassword);
+        console.log(result);
+        // const token = jwt.sign({ userId: user._id }, "ksjghdfliSGvligSBDLVb", {
+        //   expiresIn: "24h",
+        // });
+        // res.status(200).json({
+        //   userId: user._id,
+        //   token: token,
+        // });
+        return res.status(200).json({
+          user: result,
+          message: "Logged in",
+        });
+      } else {
+        return res.status(400).json({
+          message: "Could not log in",
+        });
+      }
     }
   );
 });
@@ -190,7 +213,13 @@ app.post("/api/auth/signup", async (req, res, next) => {
         }
         insertId = result.insertId;
         console.log(chalk.blue(insertId));
-
+        // const token = jwt.sign({ userId: user._id }, "ksjghdfliSGvligSBDLVb", {
+        //   expiresIn: "24h",
+        // });
+        // res.status(200).json({
+        //   userId: user._id,
+        //   token: token,
+        // });
         return res.status(200).json({
           user: {
             email,
@@ -227,7 +256,7 @@ app.delete("/api/auth/:id", (req, res, next) => {
   );
 });
 
-app.put("/api/auth/", (req, res, next) => {
+app.put("/api/auth/user", (req, res, next) => {
   console.log("updating profile");
   const { id, email, firstName, lastName } = req.body;
   let { articlesRead } = req.body;
@@ -246,6 +275,29 @@ app.put("/api/auth/", (req, res, next) => {
       }
       return res.status(200).json({
         message: "Profile updated",
+      });
+    }
+  );
+});
+
+app.put("/api/auth/password", async (req, res, next) => {
+  console.log("updating password");
+  const { userId, password } = req.body;
+  console.log(req.body);
+  console.log(chalk.magenta(userId, password));
+
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  console.log(hashedPassword);
+  connection.query(
+    `UPDATE Users SET password = '${hashedPassword}' WHERE id = ${userId}`,
+    function (error, result) {
+      if (error) {
+        return res.status(400).json({
+          message: "Unable to change password",
+        });
+      }
+      return res.status(200).json({
+        message: "Password updated",
       });
     }
   );

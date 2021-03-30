@@ -12,6 +12,8 @@ function App() {
   const [showProfile, openProfile] = useState(false);
   const [editProfile, changeProfileDetails] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setError] = useState('');
 
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
@@ -85,6 +87,10 @@ function App() {
           isSignedUp={isSignedUp}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          isError={isError}
+          setError={setError}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
 

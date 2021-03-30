@@ -19,27 +19,40 @@ function EditProfile(props) {
     firstName: currentUser.firstName,
     lastName: currentUser.lastName,
     id: currentUser.id,
-    password: '',
-    confirmPassword: '',
-    // picture: '',
   });
 
+  const [newPassword, setNewPassword] = useState({
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const { firstName, lastName, id, password, confirmPassword } = userDetails;
 
+  useEffect(() => {
+    console.log('password details updated');
+    if (newPassword.password === newPassword.confirmPassword) {
+      console.log('passwords matching');
+      setButtonDisabled(false);
+    }
+    if (newPassword.password !== newPassword.confirmPassword) {
+      console.log('passwords not matching');
+      setButtonDisabled(true);
+    }
+  }, [newPassword]);
+
   function closeEditProfile() {
-    changeProfileDetails(!editProfile);
+    changeProfileDetails(false);
   }
 
   function closeEditPassword() {
-    setChangePassword(!changePassword);
+    setChangePassword(false);
   }
 
   function openChangePassword() {
     setChangePassword(!changePassword);
   }
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   function displayPassword() {
     setShowPassword(!showPassword);
@@ -57,6 +70,20 @@ function EditProfile(props) {
     }
   };
 
+  const savePassword = () => {
+    console.log('changing password');
+    console.log(newPassword.password);
+    console.log(id);
+    const passwordInfo = { password: newPassword.password, userId: id };
+    try {
+      axios.put('http://localhost:3001/api/auth/password', passwordInfo);
+      changeProfileDetails(false);
+    } catch (err) {
+      console.log(err);
+      console.log('error changing password');
+    }
+  };
+
   const handleInput = (event) => {
     setUserDetails((prevState) => {
       const newCurrentUserDetails = {
@@ -64,6 +91,16 @@ function EditProfile(props) {
         [event.target.name]: event.target.value,
       };
       return newCurrentUserDetails;
+    });
+  };
+
+  const handlePasswordInput = (event) => {
+    setNewPassword((prevState) => {
+      const passwordInput = {
+        ...prevState,
+        [event.target.name]: event.target.value,
+      };
+      return passwordInput;
     });
   };
 
@@ -85,7 +122,7 @@ function EditProfile(props) {
     event.preventDefault();
     try {
       console.log('contacting db');
-      await axios.put(`http://localhost:3001/api/auth/`, currentUser);
+      await axios.put(`http://localhost:3001/api/auth/user`, currentUser);
       openProfile(false);
     } catch (err) {
       setButtonDisabled(true);
@@ -93,8 +130,6 @@ function EditProfile(props) {
       console.error('Error submitting');
     }
   };
-
-  console.log(confirmPassword);
 
   return (
     <>
@@ -138,18 +173,6 @@ function EditProfile(props) {
               />
             </label>
           </div>
-          {/* <div className="form-group">
-          <label htmlFor="picture">
-            <input
-              placeholder="upload photo"
-              type="text"
-              id="picture"
-              name="picture"
-              value={picture}
-              onChange={handleInput}
-            />
-          </label>
-          </div> */}
 
           <div>
             {!changePassword ? (
@@ -190,7 +213,7 @@ function EditProfile(props) {
                         }`}
                         value={password}
                         autoComplete="off"
-                        onChange={handleInput}
+                        onChange={handlePasswordInput}
                       />
                     </label>
                   </div>
@@ -212,15 +235,13 @@ function EditProfile(props) {
                       placeholder="confirm new password"
                       type="text"
                       className={`${!showPassword ? 'confirmPassword' : ''}${
-                        buttonDisabled && confirmPassword.length > 3
-                          ? ' input-error'
-                          : ''
+                        buttonDisabled ? ' input-error' : ''
                       }`}
                       id="confirmPassword"
                       name="confirmPassword"
                       autoComplete="off"
                       value={confirmPassword}
-                      onChange={handleInput}
+                      onChange={handlePasswordInput}
                     />
                   </label>
                 </div>
@@ -235,7 +256,8 @@ function EditProfile(props) {
             ) : (
               <button
                 className="text-button"
-                type="submit"
+                type="button"
+                onClick={savePassword}
                 disabled={buttonDisabled === true}
               >
                 Save password
