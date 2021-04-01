@@ -24,6 +24,8 @@ function EditProfile(props) {
   const [newPassword, setNewPassword] = useState({
     password: '',
     confirmPassword: '',
+    id: currentUser.id,
+    token: currentUser.token,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -72,11 +74,11 @@ function EditProfile(props) {
 
   const savePassword = () => {
     console.log('changing password');
-    console.log(newPassword.password);
+    console.log(currentUser);
     console.log(id);
-    const passwordInfo = { password: newPassword.password, userId: id };
+    // const passwordInfo = { password: newPassword.password, userId: id };
     try {
-      axios.put('http://localhost:3001/users/password', passwordInfo);
+      axios.put('http://localhost:3001/users/password', newPassword);
       changeProfileDetails(false);
     } catch (err) {
       console.log(err);
@@ -92,6 +94,7 @@ function EditProfile(props) {
       };
       return newCurrentUserDetails;
     });
+    console.log(userDetails);
   };
 
   const handlePasswordInput = (event) => {
@@ -104,19 +107,12 @@ function EditProfile(props) {
     });
   };
 
-  useEffect(() => {
-    if (userDetails.password === userDetails.confirmPassword) {
-      console.log('passwords matching');
-      setButtonDisabled(false);
-    }
-    if (userDetails.password !== userDetails.confirmPassword) {
-      console.log('passwords not matching');
-      setButtonDisabled(true);
-    }
-  }, [userDetails]);
-
   const handleSubmit = async (event) => {
     console.log('sending new profile');
+    console.log(userDetails);
+    currentUser.id = userDetails.id;
+    currentUser.firstName = userDetails.firstName;
+    currentUser.lastName = userDetails.lastName;
     console.log(currentUser);
 
     event.preventDefault();
@@ -126,7 +122,6 @@ function EditProfile(props) {
       openProfile(false);
     } catch (err) {
       setButtonDisabled(true);
-
       console.error('Error submitting');
     }
   };

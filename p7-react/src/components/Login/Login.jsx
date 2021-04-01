@@ -60,6 +60,7 @@ function Login(props) {
       currentUser.lastName = res.data.user[0].lastName;
       currentUser.email = userDetails.email;
       currentUser.articlesRead = JSON.parse(res.data.user[0].articlesRead);
+      currentUser.token = res.data.user[0].token;
 
       console.log(currentUser);
 

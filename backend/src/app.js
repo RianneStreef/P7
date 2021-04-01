@@ -17,10 +17,10 @@ const { connection } = require("./db");
 
 require("dotenv").config();
 
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+// connection.connect(function (err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+// });
 
 app.use(cors({ origin: true, credentials: true }));
 

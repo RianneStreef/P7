@@ -12,20 +12,22 @@ const jwt = require("jsonwebtoken");
 const { connection } = require("../db");
 
 exports.login = async (req, res, next) => {
+  // connection.connect(() => {
+  //   console.log("connecting");
   console.log("logging in ");
   const { email, password } = req.body;
 
-  if (!req?.body?.password || !req?.body?.email) {
-    return res.status(400).json({
-      message: "Incorrect input",
-    });
-  }
+  // if (!req?.body?.password || !req?.body?.email) {
+  //   return res.status(400).json({
+  //     message: "Incorrect input",
+  //   });
+  // }
   connection.query(
     `SELECT password, id, firstName, lastName, articlesRead FROM Users WHERE email='${email}';`,
     async function (err, result) {
       if (err) {
         console.log(chalk.magenta(err));
-        console.log("unable to login");
+        console.log(chalk.magenta("unable to login"));
 
         return res.status(400).json({
           message: "Unable to login",
@@ -57,6 +59,13 @@ exports.login = async (req, res, next) => {
       }
     }
   );
+  // });
+  // connection.end(function (err) {
+  //   if (err) {
+  //     return console.log("error:" + err.message);
+  //   }
+  //   console.log("Close the database connection.");
+  // });
 };
 
 exports.signup = async (req, res, next) => {
@@ -72,7 +81,7 @@ exports.signup = async (req, res, next) => {
     !req?.body?.lastName
   ) {
     return res.status(400).json({
-      message: "Incorrect input",
+      message: "Uncomplete input",
     });
   }
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -137,7 +146,6 @@ exports.deleteProfile = (req, res, next) => {
 };
 
 exports.updateProfile = (req, res, next) => {
-  // connection.connect(() => {
   console.log("updating profile");
   const { id, email, firstName, lastName } = req.body;
   let { articlesRead } = req.body;
@@ -147,9 +155,8 @@ exports.updateProfile = (req, res, next) => {
   connection.query(
     `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', articlesRead = '${articlesRead}' WHERE id = ${id}`,
     function (err, result) {
-      // console.log("err");
-      // console.log(err);
       if (err) {
+        console.log("unable to update");
         return res.status(400).json({
           message: "Unable to update profile",
         });
@@ -159,7 +166,6 @@ exports.updateProfile = (req, res, next) => {
       });
     }
   );
-  // });
 };
 
 exports.updatePassword = async (req, res, next) => {

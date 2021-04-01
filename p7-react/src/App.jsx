@@ -17,6 +17,7 @@ function App() {
     lastName: '',
     email: '',
     articlesRead: [],
+    token: '',
   });
   const [currentArticle, setCurrentArticle] = useState({
     id: '',

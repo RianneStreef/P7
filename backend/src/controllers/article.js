@@ -12,7 +12,7 @@ const { connection } = require("../db");
 
 exports.getAll = (req, res, next) => {
   // connection.connect(() => {
-  // console.log("connecting");
+  //   console.log("connecting");
   connection.query(
     "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
     function (err, result) {
@@ -27,12 +27,12 @@ exports.getAll = (req, res, next) => {
     }
   );
 
-  // connection.end(function (err) {
-  //   if (err) {
-  //     return console.log("error:" + err.message);
-  //   }
-  //   console.log("Close the database connection.");
-  // });
+  //   connection.end(function (err) {
+  //     if (err) {
+  //       return console.log("error:" + err.message);
+  //     }
+  //     console.log("Close the database connection.");
+  //   });
   // });
 };
 

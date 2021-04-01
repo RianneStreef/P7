@@ -18,11 +18,11 @@ function signUp(props) {
   } = props;
 
   const [signUpDetails, setSignUpDetails] = useState({
-    email: 'riannestreef@gmail.com',
+    email: '',
     password: '',
     confirmPassword: '',
-    firstName: 'Rianne',
-    lastName: 'Streef',
+    firstName: '',
+    lastName: '',
     articlesRead: [],
   });
 
@@ -48,6 +48,7 @@ function signUp(props) {
         ...prevState,
         [event.target.name]: event.target.value,
       };
+
       return inputDetails;
     });
   };
@@ -74,15 +75,21 @@ function signUp(props) {
       setIsLoading(false);
       setLoggedIn(true);
 
+      console.log(res);
+      console.log(res.data);
+
       currentUser.email = res.data.user.email;
       currentUser.id = res.data.user.id;
       currentUser.firstName = res.data.user.firstName;
       currentUser.lastName = res.data.user.lastName;
       currentUser.articlesRead = JSON.parse(res.data.user.articlesRead);
+      currentUser.token = res.data.user.token;
 
       currentArticle.id = '';
       currentArticle.usersLiked = [];
       currentArticle.usersDisliked = [];
+
+      console.log(currentUser);
     } catch (err) {
       if (err?.response && err?.response?.data?.message) {
         console.log(err?.response?.data?.message);
