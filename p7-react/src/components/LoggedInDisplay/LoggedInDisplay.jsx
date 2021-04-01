@@ -15,6 +15,8 @@ function LoggedInDisplay(props) {
     currentUser,
     setCurrentUser,
     logOut,
+    currentArticle,
+    setCurrentArticle,
   } = props;
 
   return (
@@ -37,6 +39,8 @@ function LoggedInDisplay(props) {
           setAddArticle={setAddArticle}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       )}
     </div>

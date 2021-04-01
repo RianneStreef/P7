@@ -62,7 +62,7 @@ function EditProfile(props) {
     console.log('deleting profile');
     console.log(id);
     try {
-      await axios.delete(`http://localhost:3001/api/auth/${id}`);
+      await axios.delete(`http://localhost:3001/users/${id}`);
       logOut();
     } catch (err) {
       console.log(err);
@@ -76,7 +76,7 @@ function EditProfile(props) {
     console.log(id);
     const passwordInfo = { password: newPassword.password, userId: id };
     try {
-      axios.put('http://localhost:3001/api/auth/password', passwordInfo);
+      axios.put('http://localhost:3001/users/password', passwordInfo);
       changeProfileDetails(false);
     } catch (err) {
       console.log(err);
@@ -122,7 +122,7 @@ function EditProfile(props) {
     event.preventDefault();
     try {
       console.log('contacting db');
-      await axios.put(`http://localhost:3001/api/auth/user`, currentUser);
+      await axios.put(`http://localhost:3001/users/user`, currentUser);
       openProfile(false);
     } catch (err) {
       setButtonDisabled(true);

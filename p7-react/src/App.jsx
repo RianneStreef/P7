@@ -11,7 +11,18 @@ function App() {
   const [addArticle, setAddArticle] = useState(false);
   const [showProfile, openProfile] = useState(false);
   const [editProfile, changeProfileDetails] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({
+    id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    articlesRead: [],
+  });
+  const [currentArticle, setCurrentArticle] = useState({
+    id: '',
+    usersLiked: [],
+    usersDisliked: [],
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState('');
 
@@ -24,6 +35,7 @@ function App() {
 
   function changeCurrentUser() {
     setCurrentUser({});
+    console.log(currentUser);
   }
 
   function logOut() {
@@ -39,9 +51,13 @@ function App() {
     // fetchData() function will add the API call data to your state
     function fetchData(req, res, err) {
       console.log('fetching articles');
-      fetch('http://localhost:3001/api/articles')
+      fetch('http://localhost:3001/articles')
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
+      if (err) {
+        console.log(err);
+        console.log('problem');
+      }
     }
     fetchData();
   }, []); // dependencies
@@ -79,6 +95,8 @@ function App() {
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
           logOut={logOut}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       ) : (
         <FormToDisplay
@@ -91,12 +109,10 @@ function App() {
           setError={setError}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       )}
-
-      <button type="button" onClick={changeLogin}>
-        Change Login
-      </button>
     </div>
   );
 }

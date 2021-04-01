@@ -8,6 +8,8 @@ function ShowArticles(props) {
     addArticle,
     setAddArticle,
     currentUser,
+    currentArticle,
+    setCurrentArticle,
   } = props;
 
   function openAddArticle() {
@@ -28,6 +30,8 @@ function ShowArticles(props) {
         articles={articles}
         setArticles={setArticles}
         currentUser={currentUser}
+        currentArticle={currentArticle}
+        setCurrentArticle={setCurrentArticle}
       />
     </div>
   );

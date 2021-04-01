@@ -13,6 +13,8 @@ function FormToDisplay(props) {
     setError,
     isLoading,
     setIsLoading,
+    currentArticle,
+    setCurrentArticle,
   } = props;
   return (
     <div className="main">
@@ -27,6 +29,8 @@ function FormToDisplay(props) {
           setError={setError}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       ) : (
         <SignUp
@@ -38,6 +42,8 @@ function FormToDisplay(props) {
           setError={setError}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       )}
     </div>

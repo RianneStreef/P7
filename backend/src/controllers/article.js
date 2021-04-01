@@ -8,22 +8,15 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 
-const connection = mysql.createConnection({
-  host: "remotemysql.com",
-  user: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  database: "OXgD76ZhvJ",
-});
+const { connection } = require("../db");
 
 exports.getAll = (req, res, next) => {
-  // connection.connect() {
-  //   if (error) {
-  //     throw error;
-  //   }
+  // connection.connect(() => {
+  // console.log("connecting");
   connection.query(
     "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
-    function (error, result) {
-      if (error) {
+    function (err, result) {
+      if (err) {
         return res.status(400).json({
           message: "Unable to fetch articles",
         });
@@ -33,16 +26,20 @@ exports.getAll = (req, res, next) => {
       });
     }
   );
-  // connection.end((error) => {
-  //   console.log("Closed connection");
-  //   if (error) {
-  //     throw error;
+
+  // connection.end(function (err) {
+  //   if (err) {
+  //     return console.log("error:" + err.message);
   //   }
+  //   console.log("Close the database connection.");
   // });
   // });
 };
 
 exports.getOne = (req, res, next) => {
+  // connection.connect(() => {
+  // console.log("connecting");
+
   console.log("searching for article");
   const id = req.params.id;
   console.log(chalk.magenta(id));
@@ -59,9 +56,20 @@ exports.getOne = (req, res, next) => {
       });
     }
   );
+
+  // connection.end(function (err) {
+  //   if (err) {
+  //     return console.log("error:" + err.message);
+  //   }
+  //   console.log("Close the database connection.");
+  // });
+  // });
 };
 
 exports.update = (req, res, next) => {
+  // connection.connect(() => {
+  //console.log("connecting");
+
   console.log("updating article");
   const { id } = req.body;
   let { usersLiked, usersDisliked } = req.body;
@@ -82,9 +90,20 @@ exports.update = (req, res, next) => {
       });
     }
   );
+
+  // connection.end(function (err) {
+  //   if (err) {
+  //     return console.log("error:" + err.message);
+  //   }
+  //   console.log("Close the database connection.");
+  // });
+  // });
 };
 
-exports.likeArticles = (req, res, next) => {
+exports.addArticle = (req, res, next) => {
+  // connection.connect(() => {
+  // console.log("connecting");
+
   console.log("start");
   const { title, description, url } = req.body;
   let { usersLiked, usersDisliked } = req.body;
@@ -114,4 +133,12 @@ exports.likeArticles = (req, res, next) => {
       });
     }
   );
+
+  // connection.end(function (err) {
+  //   if (err) {
+  //     return console.log("error:" + err.message);
+  //   }
+  //   console.log("Close the database connection.");
+  // });
+  // });
 };

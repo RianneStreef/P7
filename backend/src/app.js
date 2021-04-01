@@ -13,14 +13,9 @@ const path = require("path");
 const articleRoutes = require("./routes/article");
 const userRoutes = require("./routes/user");
 
-require("dotenv").config();
+const { connection } = require("./db");
 
-const connection = mysql.createConnection({
-  host: "remotemysql.com",
-  user: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  database: "OXgD76ZhvJ",
-});
+require("dotenv").config();
 
 connection.connect(function (err) {
   if (err) throw err;
@@ -45,7 +40,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 // app.use(bodyParser.json());
 
-app.use("/api/articles", articleRoutes);
-app.use("/api/auth", userRoutes);
+app.use("/articles", articleRoutes);
+app.use("/users", userRoutes);
 
 module.exports = app;

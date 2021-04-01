@@ -34,7 +34,7 @@ function AddArticle(props) {
 
   function fetchData() {
     console.log('fetching data');
-    fetch('http://localhost:3001/api/articles')
+    fetch('http://localhost:3001/articles')
       .then((response) => response.json())
       .then((json) => setArticles(json.articles));
   }
@@ -57,7 +57,7 @@ function AddArticle(props) {
       //   articleDetails.usersDisliked
       // );
       console.log(articleDetails);
-      await axios.post('http://localhost:3001/api/articles/', articleDetails);
+      await axios.post('http://localhost:3001/articles/', articleDetails);
       fetchData();
       setIsLoading(false);
       setAddArticle(false);

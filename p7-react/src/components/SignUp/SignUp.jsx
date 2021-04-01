@@ -13,6 +13,8 @@ function signUp(props) {
     setError,
     isLoading,
     setIsLoading,
+    currentArticle,
+    setCurrentArticle,
   } = props;
 
   const [signUpDetails, setSignUpDetails] = useState({
@@ -71,7 +73,7 @@ function signUp(props) {
     try {
       console.log(currentUser);
       const res = await axios.post(
-        'http://localhost:3001/api/auth/signup',
+        'http://localhost:3001/users/signup',
         signUpDetails
       );
       setIsLoading(false);
@@ -89,6 +91,10 @@ function signUp(props) {
       currentUser.lastName = res.data.user.lastName;
       currentUser.articlesRead = JSON.parse(res.data.user.articlesRead);
       console.log(currentUser);
+
+      currentArticle.id = '';
+      currentArticle.usersLiked = [];
+      currentArticle.usersDisliked = [];
     } catch (err) {
       if (err?.response && err?.response?.data?.message) {
         console.log(err?.response?.data?.message);

@@ -3,7 +3,14 @@ import './Login.css';
 import axios from 'axios';
 
 function Login(props) {
-  const { currentUser, setLoggedIn, setError, setIsLoading } = props;
+  const {
+    currentUser,
+    setLoggedIn,
+    setError,
+    setIsLoading,
+    currentArticle,
+    setCurrentArticle,
+  } = props;
 
   const [userDetails, setUserDetails] = useState({
     email: 'riannestreef@gmail.com',
@@ -37,7 +44,7 @@ function Login(props) {
     try {
       console.log(userDetails.email);
       const res = await axios.put(
-        `http://localhost:3001/api/auth/login`,
+        `http://localhost:3001/users/login`,
         userDetails
       );
       console.log(res);
@@ -45,10 +52,17 @@ function Login(props) {
       currentUser.firstName = res.data.user[0].firstName;
       currentUser.lastName = res.data.user[0].lastName;
       currentUser.email = userDetails.email;
+      currentUser.articlesRead = JSON.parse(res.data.user[0].articlesRead);
+
       console.log(currentUser);
+
+      currentArticle.id = '';
+      currentArticle.usersLiked = [];
+      currentArticle.usersDisliked = [];
       setLoggedIn(true);
     } catch (err) {
       console.error('Error logging in');
+      setIsLoading(false);
     }
   };
 

@@ -3,24 +3,24 @@ import './Article.css';
 import axios from 'axios';
 
 export default function displayArticles(props) {
-  const { articles, setArticles, currentUser } = props;
+  const {
+    articles,
+    setArticles,
+    currentUser,
+    currentArticle,
+    setCurrentArticle,
+  } = props;
   let { articlesRead } = currentUser;
   if (!articlesRead) {
     articlesRead = [];
   }
-
-  const [currentArticle, setCurrentArticle] = useState({
-    id: '',
-    usersLiked: [],
-    usersDisliked: [],
-  });
 
   const { usersLiked, usersDisliked } = currentArticle;
 
   function fetchData() {
     console.log('fetching data');
     try {
-      fetch('http://localhost:3001/api/articles')
+      fetch('http://localhost:3001/articles')
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
     } catch {
@@ -34,7 +34,7 @@ export default function displayArticles(props) {
     console.log(currentArticle);
     try {
       const res = await axios.get(
-        `http://localhost:3001/api/articles/${currentArticle.id}`
+        `http://localhost:3001/articles/${currentArticle.id}`
       );
       console.log('getting article info');
       console.log(res);
@@ -97,7 +97,7 @@ export default function displayArticles(props) {
     try {
       console.log(currentArticle.usersLiked);
       console.log(currentArticle);
-      await axios.put('http://localhost:3001/api/articles/', currentArticle);
+      await axios.put('http://localhost:3001/articles/', currentArticle);
       console.log('updating article');
       fetchData();
       console.log('fetch data');
@@ -143,7 +143,7 @@ export default function displayArticles(props) {
     try {
       console.log(currentArticle.usersDisliked);
       console.log(currentArticle);
-      await axios.put('http://localhost:3001/api/articles/', currentArticle);
+      await axios.put('http://localhost:3001/articles/', currentArticle);
       console.log('updating article');
       fetchData();
       console.log('fetch data');
@@ -166,7 +166,9 @@ export default function displayArticles(props) {
       console.log(articlesRead);
 
       try {
-        await axios.put('http://localhost:3001/api/auth/user', currentUser);
+        await axios.put('http://localhost:3001/users/user', currentUser);
+        console.log('new users read array');
+        console.log(currentUser);
         fetchData();
       } catch (err) {
         console.error('Could not mark as read');
