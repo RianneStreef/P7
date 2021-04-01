@@ -12,40 +12,43 @@ const jwt = require("jsonwebtoken");
 const { connection } = require("../db");
 
 exports.login = async (req, res, next) => {
-  console.log("finding user");
+  console.log("logging in ");
   const { email, password } = req.body;
-  console.log(email);
-  console.log(chalk.magenta(password));
+
+  if (!req?.body?.password || !req?.body?.email) {
+    return res.status(400).json({
+      message: "Incorrect input",
+    });
+  }
   connection.query(
     `SELECT password, id, firstName, lastName, articlesRead FROM Users WHERE email='${email}';`,
     async function (err, result) {
       if (err) {
+        console.log(chalk.magenta(err));
+        console.log("unable to login");
+
         return res.status(400).json({
           message: "Unable to login",
         });
       }
-      console.log(result);
-      console.log(result[0].firstName);
-
       const id = result[0].id;
       const hash = result[0].password;
       const data = password;
-      console.log(chalk.greenBright(id));
-      console.log(chalk.yellow(hash));
-      console.log(chalk.blue(data));
       const comparedPassword = await bcrypt.compare(data, hash);
       if (comparedPassword === true) {
-        console.log(comparedPassword);
-        console.log(result);
         const token = jwt.sign({ userId: id }, "ksjghdfliSGvligSBDLVb", {
           expiresIn: "24h",
         });
-        console.log(chalk.blueBright(token));
         res.status(200).json({
           userId: id,
           token: token,
           user: result,
           message: "Logged in",
+        });
+      }
+      if (comparedPassword === false) {
+        return res.status(400).json({
+          message: "Incorrect password",
         });
       } else {
         return res.status(400).json({
@@ -55,24 +58,23 @@ exports.login = async (req, res, next) => {
     }
   );
 };
+
 exports.signup = async (req, res, next) => {
-  // connection.connect(async () => {
   console.log("signing up");
   const { email, password, firstName, lastName } = req.body;
   let { articlesRead } = req.body;
   articlesRead = JSON.stringify(articlesRead);
   console.log(email, password, firstName, lastName, articlesRead);
-
-  // Check if all fields are submitted
-  // Validate each of the fields
-  // You can use the Validator library
-  if (!req?.body?.password) {
+  if (
+    !req?.body?.password ||
+    !req?.body?.email ||
+    !req?.body?.firstName ||
+    !req?.body?.lastName
+  ) {
     return res.status(400).json({
       message: "Incorrect input",
-      field: "",
     });
   }
-
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   console.log(hashedPassword);
   let insertId = "";
@@ -81,35 +83,20 @@ exports.signup = async (req, res, next) => {
       `INSERT INTO Users (firstName, lastName, email, password, articlesRead)
         VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}' ,'${articlesRead}');`,
       function (err, result) {
-        console.log(chalk.magenta(result));
-        console.log(result.insertId);
         if (err) {
-          console.log(err);
+          console.log(chalk.magenta(err));
+          console.log(chalk.greenBright(err.errno));
           if (err.errno && err.errno === 1062) {
             return res.status(400).json({
               message: "Error. Duplicate email field",
               field: "email",
             });
           }
-          // THIS IS FOR DEMO, TAKE OUT OR REWORK
-          // The field shows which control on frontend had an error
-          if (err.errno && err.errno === 9999999) {
-            return res.status(400).json({
-              message: "Error. Username invalid syntax",
-              field: "username",
-            });
-          }
-          /* return res.status(500).json({
-              message: 'Unknown error',
-            }); */
         }
         insertId = result.insertId;
-        console.log(chalk.blue(insertId));
-
         const token = jwt.sign({ userId: insertId }, "ksjghdfliSGvligSBDLVb", {
           expiresIn: "24h",
         });
-
         return res.status(200).json({
           user: {
             email,
@@ -124,10 +111,8 @@ exports.signup = async (req, res, next) => {
       }
     );
   } catch (err) {
-    console.log("MAJOR ERROR");
     console.log(err);
   }
-  // });
 };
 
 exports.deleteProfile = (req, res, next) => {
@@ -177,14 +162,14 @@ exports.updateProfile = (req, res, next) => {
   // });
 };
 
-exports.updatePassword = (req, res, next) => {
+exports.updatePassword = async (req, res, next) => {
   // connection.connect(() => {
   console.log("updating password");
   const { userId, password } = req.body;
   console.log(req.body);
   console.log(chalk.magenta(userId, password));
 
-  const hashedPassword = bcrypt.hash(req.body.password, 10);
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
   console.log(hashedPassword);
   connection.query(
     `UPDATE Users SET password = '${hashedPassword}' WHERE id = ${userId}`,

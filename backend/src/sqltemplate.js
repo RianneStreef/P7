@@ -7,7 +7,7 @@ con.query(
 );
 
 con.query(
-  "create table Users (id int auto_increment primary key, firstName varchar(255) null, lastName varchar(255) null, email varchar(255) null, password varchar(255) null);",
+  "create table Users (id int auto_increment primary key, firstName varchar(255) null, lastName varchar(255) null, email varchar(255) null, password varchar(255) null), articlesRead varchar(255) null;",
   function (err, result) {
     if (err) throw err;
     console.log("Table created");

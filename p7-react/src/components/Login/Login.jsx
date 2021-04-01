@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Login.css';
 import axios from 'axios';
+import Spinner from '../Spinner/Spinner';
 
 function Login(props) {
   const {
     currentUser,
     setLoggedIn,
+    isError,
     setError,
+    isLoading,
     setIsLoading,
     currentArticle,
     setCurrentArticle,
@@ -15,6 +18,10 @@ function Login(props) {
   const [userDetails, setUserDetails] = useState({
     email: 'riannestreef@gmail.com',
     password: 'Hallo',
+  });
+
+  useEffect(() => {
+    setIsLoading(false);
   });
 
   const { email, password } = userDetails;
@@ -61,59 +68,72 @@ function Login(props) {
       currentArticle.usersDisliked = [];
       setLoggedIn(true);
     } catch (err) {
-      console.error('Error logging in');
+      if (err?.response && err?.response?.data?.message) {
+        console.log(err?.response?.data?.message);
+        setError(err.response.data.message);
+      } else {
+        setError('Unknown error occurred');
+      }
       setIsLoading(false);
     }
   };
 
   return (
     <div className="login card">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">
-            <input
-              placeholder="email"
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleInput}
-            />
-          </label>
-        </div>
-        <div className="password-button">
-          <div className="form-group">
-            <label htmlFor="password">
-              <input
-                placeholder="password"
-                type="text"
-                id="password"
-                name="password"
-                className={`${!showPassword ? 'password' : 'password-input'}`}
-                value={password}
-                onChange={handleInput}
-              />
-            </label>
-          </div>
-          <button
-            className="eye-button"
-            type="button"
-            onClick={displayPassword}
-          >
-            {!showPassword ? (
-              <i className="fas fa-eye" />
-            ) : (
-              <i className="fas fa-eye-slash" />
-            )}
-          </button>
-        </div>
-        <div className="button-container">
-          <button className="text-button" type="submit">
-            Log in
-          </button>
-        </div>
-      </form>
+      {isError && <div className="err">{isError}</div>}
+      {isLoading && <Spinner />}
+      {!isLoading && (
+        <>
+          <h1>Login</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="email">
+                <input
+                  placeholder="email"
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={handleInput}
+                />
+              </label>
+            </div>
+            <div className="password-button">
+              <div className="form-group">
+                <label htmlFor="password">
+                  <input
+                    placeholder="password"
+                    type="text"
+                    id="password"
+                    name="password"
+                    className={`${
+                      !showPassword ? 'password' : 'password-input'
+                    }`}
+                    value={password}
+                    onChange={handleInput}
+                  />
+                </label>
+              </div>
+              <button
+                className="eye-button"
+                type="button"
+                onClick={displayPassword}
+              >
+                {!showPassword ? (
+                  <i className="fas fa-eye" />
+                ) : (
+                  <i className="fas fa-eye-slash" />
+                )}
+              </button>
+            </div>
+            <div className="button-container">
+              <button className="text-button" type="submit">
+                Log in
+              </button>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 }

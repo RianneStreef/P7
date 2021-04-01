@@ -53,25 +53,20 @@ function signUp(props) {
   };
 
   useEffect(() => {
-    console.log('Signup details updated');
     if (signUpDetails.password === signUpDetails.confirmPassword) {
-      console.log('passwords matching');
       setButtonDisabled(false);
     }
     if (signUpDetails.password !== signUpDetails.confirmPassword) {
-      console.log('passwords not matching');
       setButtonDisabled(true);
     }
   }, [signUpDetails]);
 
   const handleSubmit = async (event) => {
-    console.log('sending sign up details');
     setError('');
     setIsLoading(true);
 
     event.preventDefault();
     try {
-      console.log(currentUser);
       const res = await axios.post(
         'http://localhost:3001/users/signup',
         signUpDetails
@@ -79,18 +74,11 @@ function signUp(props) {
       setIsLoading(false);
       setLoggedIn(true);
 
-      console.log(res);
-
-      console.log(res.data.user);
-
-      // info is here, but not setting current use
-      // setCurrentUser(res.data.user);
       currentUser.email = res.data.user.email;
       currentUser.id = res.data.user.id;
       currentUser.firstName = res.data.user.firstName;
       currentUser.lastName = res.data.user.lastName;
       currentUser.articlesRead = JSON.parse(res.data.user.articlesRead);
-      console.log(currentUser);
 
       currentArticle.id = '';
       currentArticle.usersLiked = [];
