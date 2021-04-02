@@ -118,10 +118,13 @@ function EditProfile(props) {
     event.preventDefault();
     try {
       console.log('contacting db');
-      await axios.put(`http://localhost:3001/users/user`, currentUser);
+      const res = await axios.put(
+        `http://localhost:3001/users/user`,
+        currentUser
+      );
+      console.log(res.message);
       openProfile(false);
     } catch (err) {
-      setButtonDisabled(true);
       console.error('Error submitting');
     }
   };

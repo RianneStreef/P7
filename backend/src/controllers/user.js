@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 
 const { connection } = require("../db");
+const { yellowBright } = require("chalk");
 
 exports.login = async (req, res, next) => {
   // connection.connect(() => {
@@ -17,11 +18,11 @@ exports.login = async (req, res, next) => {
   console.log("logging in ");
   const { email, password } = req.body;
 
-  // if (!req?.body?.password || !req?.body?.email) {
-  //   return res.status(400).json({
-  //     message: "Incorrect input",
-  //   });
-  // }
+  if (!req?.body?.password || !req?.body?.email) {
+    return res.status(400).json({
+      message: "Incorrect input",
+    });
+  }
   connection.query(
     `SELECT password, id, firstName, lastName, articlesRead FROM Users WHERE email='${email}';`,
     async function (err, result) {
@@ -41,7 +42,7 @@ exports.login = async (req, res, next) => {
         const token = jwt.sign({ userId: id }, "ksjghdfliSGvligSBDLVb", {
           expiresIn: "24h",
         });
-        res.status(200).json({
+        return res.status(200).json({
           userId: id,
           token: token,
           user: result,
@@ -101,6 +102,9 @@ exports.signup = async (req, res, next) => {
               field: "email",
             });
           }
+          return res.status(400).json({
+            message: "Unknown Error",
+          });
         }
         insertId = result.insertId;
         const token = jwt.sign({ userId: insertId }, "ksjghdfliSGvligSBDLVb", {
@@ -128,7 +132,8 @@ exports.deleteProfile = (req, res, next) => {
   // connection.connect(() => {
   console.log(req.params.id);
   const id = req.params.id;
-
+  console.log(chalk.yellowBright(req.body.id));
+  console.log(chalk.yellowBright(req.body.token));
   connection.query(
     `DELETE FROM Users WHERE id='${id}';`,
     function (err, result) {
@@ -161,6 +166,7 @@ exports.updateProfile = (req, res, next) => {
           message: "Unable to update profile",
         });
       }
+      console.log(chalk.magenta(res.id));
       return res.status(200).json({
         message: "Profile updated",
       });

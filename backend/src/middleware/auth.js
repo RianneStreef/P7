@@ -3,6 +3,7 @@ const chalk = require("chalk");
 
 module.exports = (req, res, next) => {
   console.log(chalk.magenta(req.body.id));
+  console.log(chalk.blueBright(req.body.token));
   console.log(chalk.magenta("comparing tokens"));
   try {
     const token = req.body.token;
@@ -15,7 +16,10 @@ module.exports = (req, res, next) => {
     console.log(chalk.greenBright(userId));
 
     if (req.body.id && req.body.id !== userId) {
-      throw "Invalid user ID";
+      // throw "Invalid user ID";
+      return res.status(400).json({
+        message: "Invalid user ID",
+      });
     } else {
       next();
     }
