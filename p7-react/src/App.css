@@ -185,6 +185,16 @@ button:disabled:hover {
   border-bottom: solid 1px var(--color-secondary);
 }
 
+.password-desc-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.password-description {
+  font-size: 0.7rem;
+  color: var(--color-tertiary);
+}
+
 .err {
   color: red;
 }

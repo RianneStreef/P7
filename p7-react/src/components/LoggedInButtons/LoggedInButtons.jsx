@@ -2,17 +2,7 @@ import React from 'react';
 import './LoggedInButtons.css';
 
 function LoggedInButtons(props) {
-  const {
-    isLoggedIn,
-    setLoggedIn,
-    changeLogin,
-    showProfile,
-    openProfile,
-    currentUser,
-    setCurrentUser,
-    changeCurrentUser,
-    logOut,
-  } = props;
+  const { showProfile, openProfile, logOut } = props;
 
   function setProfile() {
     openProfile(!showProfile);

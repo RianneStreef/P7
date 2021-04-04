@@ -45,7 +45,7 @@ function App() {
     changeCurrentUser();
   }
 
-  const REACT_APP_SERVER_URL = process.env;
+  const { REACT_APP_SERVER_URL } = process.env;
 
   useEffect(() => {
     function fetchData(req, res, err) {

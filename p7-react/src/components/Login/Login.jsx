@@ -15,12 +15,11 @@ function Login(props) {
     isLoading,
     setIsLoading,
     currentArticle,
-    setCurrentArticle,
   } = props;
 
   const [userDetails, setUserDetails] = useState({
     email: 'riannestreef@gmail.com',
-    password: 'Hallo',
+    password: 'Hallo123',
   });
 
   useEffect(() => {

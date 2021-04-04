@@ -8,16 +8,13 @@ require('dotenv').config();
 
 function signUp(props) {
   const {
-    isLoggedIn,
     setLoggedIn,
     currentUser,
-    setCurrentUser,
     isError,
     setError,
     isLoading,
     setIsLoading,
     currentArticle,
-    setCurrentArticle,
   } = props;
 
   const [signUpDetails, setSignUpDetails] = useState({
@@ -35,7 +32,6 @@ function signUp(props) {
     confirmPassword,
     firstName,
     lastName,
-    articlesRead,
   } = signUpDetails;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -149,6 +145,11 @@ function signUp(props) {
                 )}
               </button>
             </div>
+            <div className="password-desc-container">
+              <p className="password-description">
+                * Password has to have at least 8 characters
+              </p>
+            </div>
             <div className="form-group">
               <label htmlFor="confirmPassword">
                 <input
@@ -162,6 +163,7 @@ function signUp(props) {
                   autoComplete="off"
                   value={confirmPassword}
                   onChange={handleInput}
+                  minLength="8"
                 />
               </label>
             </div>

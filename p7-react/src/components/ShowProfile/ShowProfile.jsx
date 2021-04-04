@@ -1,6 +1,5 @@
 // import userEvent from '@testing-library/user-event';
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
 import img from '../../img/profile.png';
 import companyLogo from '../../img/icon-left-font.png';
@@ -15,8 +14,6 @@ function ShowProfile(props) {
     openProfile,
     currentUser,
   } = props;
-
-  const { firstName, lastName, id, email, articlesRead } = currentUser;
 
   function showEditProfile() {
     changeProfileDetails(!editProfile);

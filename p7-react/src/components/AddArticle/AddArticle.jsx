@@ -5,7 +5,7 @@ import Spinner from '../Spinner/Spinner';
 require('dotenv').config();
 
 function AddArticle(props) {
-  const { articles, setArticles, addArticle, setAddArticle } = props;
+  const { setArticles, addArticle, setAddArticle } = props;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,7 +19,7 @@ function AddArticle(props) {
 
   const { title, description, url } = articleDetails;
 
-  const REACT_APP_SERVER_URL = process.env;
+  const { REACT_APP_SERVER_URL } = process.env;
 
   function closeAddArticle() {
     setAddArticle(!addArticle);
@@ -36,9 +36,13 @@ function AddArticle(props) {
   };
 
   function fetchData() {
-    fetch(` ${REACT_APP_SERVER_URL}/articles`)
-      .then((response) => response.json())
-      .then((json) => setArticles(json.articles));
+    try {
+      fetch(`${REACT_APP_SERVER_URL}/articles`)
+        .then((response) => response.json())
+        .then((json) => setArticles(json.articles));
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleSubmit = async (event) => {

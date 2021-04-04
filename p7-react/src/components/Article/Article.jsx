@@ -1,23 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Article.css';
 import axios from 'axios';
 
 require('dotenv').config();
 
 export default function displayArticles(props) {
-  const {
-    articles,
-    setArticles,
-    currentUser,
-    currentArticle,
-    setCurrentArticle,
-  } = props;
+  const { articles, setArticles, currentUser, currentArticle } = props;
   let { articlesRead } = currentUser;
   if (!articlesRead) {
     articlesRead = [];
   }
-
-  const { usersLiked, usersDisliked } = currentArticle;
 
   const REACT_APP_SERVER_URL = process.env;
 

@@ -5,16 +5,9 @@ import axios from 'axios';
 require('dotenv').config();
 
 function EditProfile(props) {
-  const {
-    openProfile,
-    editProfile,
-    changeProfileDetails,
-    currentUser,
-    setCurrentUser,
-    logOut,
-  } = props;
+  const { openProfile, changeProfileDetails, currentUser, logOut } = props;
 
-  const [isError, setError] = useState('');
+  const [isError] = useState('');
   const [changePassword, setChangePassword] = useState('');
 
   const [userDetails, setUserDetails] = useState({
@@ -214,6 +207,11 @@ function EditProfile(props) {
                     )}
                   </button>
                 </div>
+                <div className="password-desc-container">
+                  <p className="password-description">
+                    * Password has to have at least 8 characters
+                  </p>
+                </div>
                 <div className="form-group">
                   <label htmlFor="confirmPassword">
                     <input
@@ -227,6 +225,7 @@ function EditProfile(props) {
                       autoComplete="off"
                       value={confirmPassword}
                       onChange={handlePasswordInput}
+                      minLength="8"
                     />
                   </label>
                 </div>
