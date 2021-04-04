@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 
+require('dotenv').config();
+
 function AddArticle(props) {
   const { articles, setArticles, addArticle, setAddArticle } = props;
 
@@ -16,7 +18,8 @@ function AddArticle(props) {
   });
 
   const { title, description, url } = articleDetails;
-  // let { usersLiked, usersDisliked } = articleDetails;
+
+  const REACT_APP_SERVER_URL = process.env;
 
   function closeAddArticle() {
     setAddArticle(!addArticle);
@@ -33,7 +36,7 @@ function AddArticle(props) {
   };
 
   function fetchData() {
-    fetch('http://localhost:3001/articles')
+    fetch(` ${REACT_APP_SERVER_URL}/articles`)
       .then((response) => response.json())
       .then((json) => setArticles(json.articles));
   }
@@ -49,7 +52,7 @@ function AddArticle(props) {
       if (articleDetails.usersDisliked === null) {
         articleDetails.usersDisliked = [];
       }
-      await axios.post('http://localhost:3001/articles/', articleDetails);
+      await axios.post(`${REACT_APP_SERVER_URL}/articles/`, articleDetails);
       fetchData();
       setIsLoading(false);
       setAddArticle(false);

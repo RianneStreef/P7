@@ -45,13 +45,11 @@ function App() {
     changeCurrentUser();
   }
 
-  // eslint-disable-next-line prefer-destructuring
-  const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const REACT_APP_SERVER_URL = process.env;
 
   useEffect(() => {
     function fetchData(req, res, err) {
       fetch(`${REACT_APP_SERVER_URL}/articles`)
-        // fetch(`http://localhost:3001/articles`)
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
       if (err) {

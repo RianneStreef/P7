@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './EditProfile.css';
 import axios from 'axios';
 
+require('dotenv').config();
+
 function EditProfile(props) {
   const {
     openProfile,
@@ -32,6 +34,8 @@ function EditProfile(props) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const { firstName, lastName, id, password, confirmPassword } = userDetails;
 
+  const { REACT_APP_SERVER_URL } = process.env;
+
   useEffect(() => {
     if (newPassword.password === newPassword.confirmPassword) {
       setButtonDisabled(false);
@@ -59,7 +63,7 @@ function EditProfile(props) {
 
   const deleteProfile = async () => {
     try {
-      await axios.delete(`http://localhost:3001/users/${id}`);
+      await axios.delete(`${REACT_APP_SERVER_URL}/users/${id}`);
       logOut();
     } catch (err) {
       console.log(err);
@@ -68,7 +72,7 @@ function EditProfile(props) {
 
   const savePassword = () => {
     try {
-      axios.put('http://localhost:3001/users/password', newPassword);
+      axios.put(`${REACT_APP_SERVER_URL}/users/password`, newPassword);
       changeProfileDetails(false);
     } catch (err) {
       console.log(err);
@@ -103,7 +107,7 @@ function EditProfile(props) {
     event.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:3001/users/user`,
+        `${REACT_APP_SERVER_URL}/users/user`,
         currentUser
       );
       openProfile(false);

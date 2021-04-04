@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Article.css';
 import axios from 'axios';
 
+require('dotenv').config();
+
 export default function displayArticles(props) {
   const {
     articles,
@@ -17,20 +19,22 @@ export default function displayArticles(props) {
 
   const { usersLiked, usersDisliked } = currentArticle;
 
+  const REACT_APP_SERVER_URL = process.env;
+
   function fetchData() {
     try {
-      fetch('http://localhost:3001/articles')
+      fetch(`${REACT_APP_SERVER_URL}/articles`)
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
-    } catch {
-      // try again?!
+    } catch (err) {
+      console.log(err);
     }
   }
 
   async function updateCurrentArticle() {
     try {
       const res = await axios.get(
-        `http://localhost:3001/articles/${currentArticle.id}`
+        `${REACT_APP_SERVER_URL}/${currentArticle.id}`
       );
 
       currentArticle.usersLiked = JSON.parse(
@@ -72,7 +76,7 @@ export default function displayArticles(props) {
       currentArticle.usersLiked = newArray;
     }
     try {
-      await axios.put('http://localhost:3001/articles/', currentArticle);
+      await axios.put(`${REACT_APP_SERVER_URL}/articles/`, currentArticle);
       fetchData();
     } catch (err) {
       console.log(err);
@@ -100,7 +104,7 @@ export default function displayArticles(props) {
       currentArticle.usersDisliked = newArray;
     }
     try {
-      await axios.put('http://localhost:3001/articles/', currentArticle);
+      await axios.put(`${REACT_APP_SERVER_URL}/articles/`, currentArticle);
       fetchData();
     } catch (err) {
       console.log(err);
@@ -115,7 +119,7 @@ export default function displayArticles(props) {
       articlesRead.push(articleId);
 
       try {
-        await axios.put('http://localhost:3001/users/user', currentUser);
+        await axios.put(`${REACT_APP_SERVER_URL}/users/user`, currentUser);
 
         fetchData();
       } catch (err) {

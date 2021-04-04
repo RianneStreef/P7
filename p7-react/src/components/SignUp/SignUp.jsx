@@ -4,6 +4,8 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import companyLogo from '../../img/icon-left-font.png';
 
+require('dotenv').config();
+
 function signUp(props) {
   const {
     isLoggedIn,
@@ -39,6 +41,8 @@ function signUp(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
+  const { REACT_APP_SERVER_URL } = process.env;
+
   function displayPassword() {
     setShowPassword(!showPassword);
   }
@@ -70,7 +74,7 @@ function signUp(props) {
     event.preventDefault();
     try {
       const res = await axios.post(
-        'http://localhost:3001/users/signup',
+        `${REACT_APP_SERVER_URL}/users/signup`,
         signUpDetails
       );
       setIsLoading(false);

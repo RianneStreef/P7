@@ -4,6 +4,8 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import companyLogo from '../../img/icon-left-font.png';
 
+require('dotenv').config();
+
 function Login(props) {
   const {
     currentUser,
@@ -29,6 +31,8 @@ function Login(props) {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const { REACT_APP_SERVER_URL } = process.env;
+
   function displayPassword() {
     setShowPassword(!showPassword);
   }
@@ -49,7 +53,7 @@ function Login(props) {
     event.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:3001/users/login`,
+        `${REACT_APP_SERVER_URL}/users/login`,
         userDetails
       );
       currentUser.id = res.data.user[0].id;
