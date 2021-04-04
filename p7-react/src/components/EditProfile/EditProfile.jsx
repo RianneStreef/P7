@@ -33,13 +33,10 @@ function EditProfile(props) {
   const { firstName, lastName, id, password, confirmPassword } = userDetails;
 
   useEffect(() => {
-    console.log('password details updated');
     if (newPassword.password === newPassword.confirmPassword) {
-      console.log('passwords matching');
       setButtonDisabled(false);
     }
     if (newPassword.password !== newPassword.confirmPassword) {
-      console.log('passwords not matching');
       setButtonDisabled(true);
     }
   }, [newPassword]);
@@ -61,28 +58,20 @@ function EditProfile(props) {
   }
 
   const deleteProfile = async () => {
-    console.log('deleting profile');
-    console.log(id);
     try {
       await axios.delete(`http://localhost:3001/users/${id}`);
       logOut();
     } catch (err) {
       console.log(err);
-      console.error('Error deleting');
     }
   };
 
   const savePassword = () => {
-    console.log('changing password');
-    console.log(currentUser);
-    console.log(id);
-    // const passwordInfo = { password: newPassword.password, userId: id };
     try {
       axios.put('http://localhost:3001/users/password', newPassword);
       changeProfileDetails(false);
     } catch (err) {
       console.log(err);
-      console.log('error changing password');
     }
   };
 
@@ -94,7 +83,6 @@ function EditProfile(props) {
       };
       return newCurrentUserDetails;
     });
-    console.log(userDetails);
   };
 
   const handlePasswordInput = (event) => {
@@ -108,24 +96,19 @@ function EditProfile(props) {
   };
 
   const handleSubmit = async (event) => {
-    console.log('sending new profile');
-    console.log(userDetails);
     currentUser.id = userDetails.id;
     currentUser.firstName = userDetails.firstName;
     currentUser.lastName = userDetails.lastName;
-    console.log(currentUser);
 
     event.preventDefault();
     try {
-      console.log('contacting db');
       const res = await axios.put(
         `http://localhost:3001/users/user`,
         currentUser
       );
-      console.log(res.message);
       openProfile(false);
     } catch (err) {
-      console.error('Error submitting');
+      console.log(err);
     }
   };
 

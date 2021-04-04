@@ -4,6 +4,8 @@ import Header from './components/Header/Header';
 import FormToDisplay from './components/FormToDisplay/FormToDisplay';
 import LoggedInDisplay from './components/LoggedInDisplay/LoggedInDisplay';
 
+require('dotenv').config();
+
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isSignedUp, setSignUp] = useState(true);
@@ -27,6 +29,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState('');
 
+  // eslint-disable-next-line prefer-destructuring
+  // const SERVER_URL = process.env.SERVER_URL;
+
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
     setAddArticle(false);
@@ -36,34 +41,25 @@ function App() {
 
   function changeCurrentUser() {
     setCurrentUser({});
-    console.log(currentUser);
   }
 
   function logOut() {
     changeLogin();
     changeCurrentUser();
-    console.log(currentUser);
-    console.log('logged out');
   }
 
   useEffect(() => {
-    // Runs once. When it runs, it will call the fetchData()
-    //    function.
-    // fetchData() function will add the API call data to your state
     function fetchData(req, res, err) {
-      console.log('fetching articles');
-      fetch('http://localhost:3001/articles')
+      // fetch(`${process.env.SERVER_URL}/articles`)
+      fetch(`http://localhost:3001/articles`)
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
       if (err) {
         console.log(err);
-        console.log('problem');
       }
     }
     fetchData();
   }, []); // dependencies
-
-  console.log(articles);
 
   return (
     <div className="wrapper">

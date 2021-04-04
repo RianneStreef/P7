@@ -11,8 +11,6 @@ const bodyParser = require("body-parser");
 const { connection } = require("../db");
 
 exports.getAll = (req, res, next) => {
-  // connection.connect(() => {
-  //   console.log("connecting");
   connection.query(
     "SELECT * FROM articles ORDER BY id DESC LIMIT 10",
     function (err, result) {
@@ -26,23 +24,10 @@ exports.getAll = (req, res, next) => {
       });
     }
   );
-
-  //   connection.end(function (err) {
-  //     if (err) {
-  //       return console.log("error:" + err.message);
-  //     }
-  //     console.log("Close the database connection.");
-  //   });
-  // });
 };
 
 exports.getOne = (req, res, next) => {
-  // connection.connect(() => {
-  // console.log("connecting");
-
-  console.log("searching for article");
   const id = req.params.id;
-  console.log(chalk.magenta(id));
   connection.query(
     `SELECT usersLiked, usersDisliked FROM articles WHERE  id = ${id};`,
     function (err, result) {
@@ -56,27 +41,13 @@ exports.getOne = (req, res, next) => {
       });
     }
   );
-
-  // connection.end(function (err) {
-  //   if (err) {
-  //     return console.log("error:" + err.message);
-  //   }
-  //   console.log("Close the database connection.");
-  // });
-  // });
 };
 
 exports.update = (req, res, next) => {
-  // connection.connect(() => {
-  //console.log("connecting");
-
-  console.log("updating article");
   const { id } = req.body;
   let { usersLiked, usersDisliked } = req.body;
   usersLiked = JSON.stringify(usersLiked);
   usersDisliked = JSON.stringify(usersDisliked);
-  console.log(id, usersLiked, usersDisliked);
-  console.log(typeof usersLiked);
   connection.query(
     `UPDATE articles SET usersLiked = '${usersLiked}', usersDisliked = '${usersDisliked}' WHERE id = ${id}`,
     function (err, result) {
@@ -90,29 +61,13 @@ exports.update = (req, res, next) => {
       });
     }
   );
-
-  // connection.end(function (err) {
-  //   if (err) {
-  //     return console.log("error:" + err.message);
-  //   }
-  //   console.log("Close the database connection.");
-  // });
-  // });
 };
 
 exports.addArticle = (req, res, next) => {
-  // connection.connect(() => {
-  // console.log("connecting");
-
-  console.log("start");
   const { title, description, url } = req.body;
   let { usersLiked, usersDisliked } = req.body;
-  console.log(title, description, url);
   usersLiked = JSON.stringify(usersLiked);
   usersDisliked = JSON.stringify(usersDisliked);
-  console.log(usersLiked, usersDisliked);
-  console.log(chalk.magenta(typeof usersLiked));
-
   connection.query(
     `INSERT INTO articles (title, description, url) VALUES ('${title}', '${description}', '${url}');`,
     function (err, result) {
@@ -127,18 +82,9 @@ exports.addArticle = (req, res, next) => {
           message: "Unknown error",
         });
       }
-
       return res.status(200).json({
         message: "success",
       });
     }
   );
-
-  // connection.end(function (err) {
-  //   if (err) {
-  //     return console.log("error:" + err.message);
-  //   }
-  //   console.log("Close the database connection.");
-  // });
-  // });
 };

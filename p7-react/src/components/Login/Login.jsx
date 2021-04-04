@@ -43,18 +43,14 @@ function Login(props) {
   };
 
   const handleSubmit = async (event) => {
-    console.log('sending login details');
     setError('');
     setIsLoading(true);
-    console.log(userDetails);
     event.preventDefault();
     try {
-      console.log(userDetails.email);
       const res = await axios.put(
         `http://localhost:3001/users/login`,
         userDetails
       );
-      console.log(res);
       currentUser.id = res.data.user[0].id;
       currentUser.firstName = res.data.user[0].firstName;
       currentUser.lastName = res.data.user[0].lastName;
@@ -62,15 +58,12 @@ function Login(props) {
       currentUser.articlesRead = JSON.parse(res.data.user[0].articlesRead);
       currentUser.token = res.data.token;
 
-      console.log(currentUser);
-
       currentArticle.id = '';
       currentArticle.usersLiked = [];
       currentArticle.usersDisliked = [];
       setLoggedIn(true);
     } catch (err) {
       if (err?.response && err?.response?.data?.message) {
-        console.log(err?.response?.data?.message);
         setError(err.response.data.message);
       } else {
         setError('Unknown error occurred');

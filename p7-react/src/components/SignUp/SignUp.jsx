@@ -75,9 +75,6 @@ function signUp(props) {
       setIsLoading(false);
       setLoggedIn(true);
 
-      console.log(res);
-      console.log(res.data);
-
       currentUser.email = res.data.user.email;
       currentUser.id = res.data.user.id;
       currentUser.firstName = res.data.user.firstName;
@@ -88,11 +85,8 @@ function signUp(props) {
       currentArticle.id = '';
       currentArticle.usersLiked = [];
       currentArticle.usersDisliked = [];
-
-      console.log(currentUser);
     } catch (err) {
       if (err?.response && err?.response?.data?.message) {
-        console.log(err?.response?.data?.message);
         setError(err.response.data.message);
       } else {
         setError('Unknown error occurred');

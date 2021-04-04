@@ -21,6 +21,7 @@ function Profile(props) {
             changeProfileDetails={changeProfileDetails}
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
+            openProfile={openProfile}
             logOut={logOut}
           />
         ) : (

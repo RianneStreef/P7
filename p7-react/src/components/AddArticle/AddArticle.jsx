@@ -33,36 +33,27 @@ function AddArticle(props) {
   };
 
   function fetchData() {
-    console.log('fetching data');
     fetch('http://localhost:3001/articles')
       .then((response) => response.json())
       .then((json) => setArticles(json.articles));
   }
 
   const handleSubmit = async (event) => {
-    console.log('sending article');
     setIsLoading(true);
 
     event.preventDefault();
     try {
-      console.log(articleDetails);
       if (articleDetails.usersLiked === null) {
         articleDetails.usersLiked = [];
       }
       if (articleDetails.usersDisliked === null) {
         articleDetails.usersDisliked = [];
       }
-      // articleDetails.usersLiked = JSON.stringify(articleDetails.usersLiked);
-      // articleDetails.usersDisliked = JSON.stringify(
-      //   articleDetails.usersDisliked
-      // );
-      console.log(articleDetails);
       await axios.post('http://localhost:3001/articles/', articleDetails);
       fetchData();
       setIsLoading(false);
       setAddArticle(false);
     } catch (err) {
-      console.error('Error posting article');
       setIsLoading(false);
     }
   };
