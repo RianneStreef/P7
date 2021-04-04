@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Login.css';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
+import companyLogo from '../../img/icon-left-font.png';
 
 function Login(props) {
   const {
@@ -128,6 +129,9 @@ function Login(props) {
           </form>
         </>
       )}
+      <div className="logo-container">
+        <img src={companyLogo} alt="Groupomania logo" className="logo-large" />
+      </div>
     </div>
   );
 }

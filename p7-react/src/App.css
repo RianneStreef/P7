@@ -32,6 +32,16 @@ i {
   margin: 5px;
 }
 
+.logo-large {
+  max-width: 30%;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

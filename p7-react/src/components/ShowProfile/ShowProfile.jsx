@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 
 import img from '../../img/profile.png';
+import companyLogo from '../../img/icon-left-font.png';
 
 import './ShowProfile.css';
 
@@ -19,7 +20,6 @@ function ShowProfile(props) {
 
   function showEditProfile() {
     changeProfileDetails(!editProfile);
-    console.log('change state edit profile to true');
   }
   function closeProfile() {
     openProfile(!showProfile);
@@ -49,6 +49,9 @@ function ShowProfile(props) {
         <button className="text-button" type="button" onClick={showEditProfile}>
           Edit Profile
         </button>
+      </div>
+      <div className="logo-container">
+        <img src={companyLogo} alt="Groupomania logo" className="logo-large" />
       </div>
     </div>
   );
