@@ -11,7 +11,7 @@ export default function displayArticles(props) {
     articlesRead = [];
   }
 
-  const REACT_APP_SERVER_URL = process.env;
+  const { REACT_APP_SERVER_URL } = process.env;
 
   function fetchData() {
     try {
@@ -26,7 +26,7 @@ export default function displayArticles(props) {
   async function updateCurrentArticle() {
     try {
       const res = await axios.get(
-        `${REACT_APP_SERVER_URL}/${currentArticle.id}`
+        `${REACT_APP_SERVER_URL}/articles/${currentArticle.id}`
       );
 
       currentArticle.usersLiked = JSON.parse(

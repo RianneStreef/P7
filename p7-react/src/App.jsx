@@ -37,7 +37,14 @@ function App() {
   }
 
   function changeCurrentUser() {
-    setCurrentUser({});
+    setCurrentUser({
+      articlesRead: [],
+      email: '',
+      firstName: '',
+      lastName: '',
+      id: '',
+      token: '',
+    });
   }
 
   function logOut() {

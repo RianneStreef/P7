@@ -1,13 +1,3 @@
-const express = require("express");
-const app = express();
-
-const mysql = require("mysql");
-const chalk = require("chalk");
-const axios = require("axios").default;
-const cors = require("cors");
-const bcrypt = require("bcrypt");
-const bodyParser = require("body-parser");
-
 const { connection } = require("../db");
 
 exports.getAll = (req, res, next) => {

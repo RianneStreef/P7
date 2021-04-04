@@ -1,8 +1,6 @@
 const http = require("http");
 const app = require("./src/app");
 
-const chalk = require("chalk");
-
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
 
