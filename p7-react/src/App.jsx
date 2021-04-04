@@ -29,9 +29,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState('');
 
-  // eslint-disable-next-line prefer-destructuring
-  // const SERVER_URL = process.env.SERVER_URL;
-
   function changeLogin() {
     setLoggedIn(!isLoggedIn);
     setAddArticle(false);
@@ -48,10 +45,13 @@ function App() {
     changeCurrentUser();
   }
 
+  // eslint-disable-next-line prefer-destructuring
+  const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
   useEffect(() => {
     function fetchData(req, res, err) {
-      // fetch(`${process.env.SERVER_URL}/articles`)
-      fetch(`http://localhost:3001/articles`)
+      fetch(`${REACT_APP_SERVER_URL}/articles`)
+        // fetch(`http://localhost:3001/articles`)
         .then((response) => response.json())
         .then((json) => setArticles(json.articles));
       if (err) {
