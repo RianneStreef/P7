@@ -24,7 +24,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-// app.use(bodyParser.json());
 
 app.use("/articles", articleRoutes);
 app.use("/users", userRoutes);

@@ -99,10 +99,7 @@ function EditProfile(props) {
 
     event.preventDefault();
     try {
-      const res = await axios.put(
-        `${REACT_APP_SERVER_URL}/users/user`,
-        currentUser
-      );
+      await axios.put(`${REACT_APP_SERVER_URL}/users/user`, currentUser);
       openProfile(false);
     } catch (err) {
       console.log(err);
